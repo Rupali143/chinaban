@@ -21,7 +21,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/t', function(){
-    Artisan::call('migrate');
-    Artisan::call('db:seed');
-});
+Route::get('/category','CategoryController@index')->name('category');

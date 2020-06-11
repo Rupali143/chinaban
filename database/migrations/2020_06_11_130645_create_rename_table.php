@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsers1Table extends Migration
+class CreateRenameTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateUsers1Table extends Migration
      */
     public function up()
     {
-        Schema::create('users1', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        // Schema::create('rename', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->timestamps();
+        // });
+        Schema::rename('categries', 'categories');
     }
 
     /**
@@ -26,6 +27,6 @@ class CreateUsers1Table extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users1');
+        Schema::dropIfExists('rename');
     }
 }
