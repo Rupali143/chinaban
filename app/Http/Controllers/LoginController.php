@@ -55,19 +55,22 @@ class LoginController extends Controller
     public function authenticate(Request $request){
         
        $validationRules = $this->validateuser($request);
-         
-        $username = $request->username;
-        $password = $request->password;
-        
-        $checkUser = AdminUser::where(['username'=>$username,'password'=>$password])->first();
-        
-        if ($checkUser){
-            Session::put('username',$request->username);
-            Session::put('userId',$checkUser->id); 
-            return redirect()->route('admin.dashboard.index')->with('success','Log in successfully');
-        }else{
-            return redirect()->route('admin.login')->with('error','Invalid username or password');
-        }        
+        try{
+            $username = $request->username;
+            $password = $request->password;
+            
+            $checkUser = AdminUser::where(['username'=>$username,'password'=>$password])->first();
+            
+            if ($checkUser){
+                Session::put('username',$request->username);
+                Session::put('userId',$checkUser->id); 
+                return redirect()->route('admin.dashboard.index')->with('success','Log in successfully');
+            }else{
+                return redirect()->route('admin.login')->with('error','Invalid username or password');
+            } 
+        }catch(\Exception $ex){
+            return redirect()->route('admin.login')->with('error',$ex->getMessage);
+        }           
     }
 
     /**
