@@ -15,7 +15,7 @@
             <a href="{{ route('category') }}" class="nav-link">
               <i class="nav-icon far fa-image"></i>
               <p>
-                Categries
+                Categories
               </p>
             </a>
           </li>

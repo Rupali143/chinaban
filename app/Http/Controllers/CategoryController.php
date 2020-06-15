@@ -13,6 +13,7 @@ class CategoryController extends Controller
     
     /**
     * Initialize Repository
+    *@Author Rupali <rupali.satpute@neosofttech.com>
     *
     * @return \App\Repositories\CategoryRepository
     */ 
@@ -23,20 +24,32 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the Category.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $categries = $this->categoryRepository->all();
-        //dd($categries);
-        echo json_encode($categries); 
-        return view('category.index');
+        $categories = $this->categoryRepository->all();
+        return view('category.index',compact('categories'));
     }
 
+    public function categoryListing(){
+             $categories = $this->categoryRepository->all();
+            return Datatables::of($categories)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($categories){
+                           $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editCategory">Edit</a>';
+                           $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Delete" class="btn btn-danger btn-sm deleteCategory">Delete</a>';
+                            return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+    }
+
+
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new Category.
      *
      * @return \Illuminate\Http\Response
      */
@@ -46,18 +59,23 @@ class CategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created Category in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $categories = $this->categoryRepository->save($request);
+            return response()->json(['success'=>'Category saved successfully.']);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getStatus());
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified Category.
      *
      * @param  \App\app\Model\Category  $category
      * @return \Illuminate\Http\Response
@@ -68,36 +86,30 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified Category.
      *
      * @param  \App\app\Model\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
-        //
+        $category = Category::find($id);
+        return response()->json($category);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\app\Model\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Category $category)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
+     * Remove the specified Category from storage.
      *
      * @param  \App\app\Model\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        try {
+            $destroyCategory = $this->categoryRepository->delete($id);
+            return response()->json(['success'=>'Category deleted successfully.']);
+        }catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getStatus());
+        }
     }
 }

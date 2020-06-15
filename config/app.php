@@ -175,6 +175,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+        *Using Ajax Display DataTable 
+        @Author Rupali<rupali.satpute@neosofttech.com>
+        */
         Yajra\DataTables\DataTablesServiceProvider::class,
 
     ],
