@@ -13,11 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('layouts.master');
-});
-
-Auth::routes();
+Route::get('dashboard','LoginController@dashboard')->name('admin.dashboard.index');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -25,3 +21,13 @@ Route::get('/t', function(){
     Artisan::call('migrate');
     Artisan::call('db:seed');
 });
+
+Route::get('/login', 'LoginController@create')->name('admin.login');
+
+Route::post('/login-admin','LoginController@authenticate')->name('login');
+
+Route::middleware('check-login-admin')->group(function () {
+    Route::get('dashboard','LoginController@dashboard')->name('admin.dashboard.index');
+});
+
+Route::post('/logout', 'LoginController@logout')->name('admin.logout');
