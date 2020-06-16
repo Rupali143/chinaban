@@ -39,7 +39,7 @@
                       <div class="form-group">
                       <label>Parent Category</label>
                       <select class="form-control select2bs4" style="width: 100%;" name="parent_category" id="parent_category">
-                        <option selected="selected" value="0">Parent</option>
+                        <option selected="selected" value="">Parent</option>
                         @foreach($categories as $category)
                         <option value="{{ $category->id }}">{{ $category->category }}</option>
                       @endforeach

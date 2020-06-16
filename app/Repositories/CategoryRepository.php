@@ -11,7 +11,6 @@ class CategoryRepository implements CategoryInterface{
 
 	protected function validateCategory($categoryRequest){
         $validateData = $categoryRequest->validate([
-         'parent_category' => 'required',
          'category' => 'required'
         ]);
     }

@@ -12,9 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
-    	DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $this->call(UserSeeder::class);
-        $this->call(CategriesSeeder::class);
+        $this->call(CategoriesSeeder::class);
     }
 }
