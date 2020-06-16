@@ -31,3 +31,12 @@ Route::middleware('check-login-admin')->group(function () {
 });
 
 Route::post('/logout', 'LoginController@logout')->name('admin.logout');
+Route::get('/category','CategoryController@index')->name('category');
+
+Route::get('/categoryListing','CategoryController@categoryListing')->name('category.listing');
+
+Route::post('/categoryStore','CategoryController@store')->name('categoryStore');
+
+Route::get('/categoryEdit/{id}','CategoryController@edit');
+
+Route::get('/categoryDestroy/{id}','CategoryController@destroy');
