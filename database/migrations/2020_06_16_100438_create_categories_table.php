@@ -4,22 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategriesTable extends Migration
+class CreateCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
      @author Rupali <rupali.satpute@neosofttech.com>
      @return void
      */
-
     public function up()
     {
-        
-        Schema::create('categries', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->Increments('id');
             $table->string('en_name',50);
-            $table->unsignedInteger('parent_category');
-            $table->foreign('parent_category')->references('id')->on('categries');
+            $table->unsignedInteger('parent_category')->nullable();
+            $table->foreign('parent_category')->references('id')->on('categories')  ;
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
             $table->softDeletes()->nullable(1);
@@ -33,6 +31,6 @@ class CreateCategriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categries');
+        Schema::dropIfExists('categories');
     }
 }
