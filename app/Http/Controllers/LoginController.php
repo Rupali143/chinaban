@@ -70,7 +70,7 @@ class LoginController extends Controller
             } 
         }catch(\Exception $ex){
             return redirect()->route('admin.login')->with('error',$ex->getMessage);
-        }           
+        } 
     }
 
     /**
