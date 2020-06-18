@@ -35,7 +35,15 @@ class CategoryController extends Controller
     }
 
     public function categoryListing(){
-             $categories = $this->categoryRepository->all();
+            $categories = $this->categoryRepository->all();
+            // dd($categories->toArray());
+            // foreach($categories as $cat){
+            //   $data = $cat->parent;
+            // }
+            // dd($data);
+            // $configPath = {{asset(config('app.file_path'))}};
+            // $configPath = env('APP_NAME');
+            // dd($configPath);
             return Datatables::of($categories)
                     ->addIndexColumn()
                     ->addColumn('action', function($categories){
@@ -43,7 +51,11 @@ class CategoryController extends Controller
                            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Delete" class="btn btn-danger btn-sm deleteCategory">Delete</a>';
                             return $btn;
                     })
-                    ->rawColumns(['action'])
+                    ->addColumn('image', function($categories){
+                           $image = '<img src="storage/images/'.$categories->image->image_location.'" style="height:50px;width:50px;">';
+                            return $image;
+                    })
+                    ->rawColumns(['action','image'])
                     ->make(true);
     }
 
@@ -93,7 +105,10 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::find($id);
+        $category = Category::with('getImage')->find($id);
+        
+        //dd($category->toArray());
+
         return response()->json($category);
     }
 

@@ -134,6 +134,8 @@ return [
     |
     */
 
+    'file_path' => env('FILE_PATH', '/'),
+
     'providers' => [
 
         /*

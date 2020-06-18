@@ -16,7 +16,7 @@
   <!-- iCheck -->
   <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- JQVMap -->
-  <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
+  <!-- <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}"> -->
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
   <!-- overlayScrollbars -->
@@ -78,12 +78,14 @@
                         </button>
                     </div>
                 </div>
-            @endif  
-              @error('captcha')
-          <span class="text-danger errormsg" role="alert">
-           <p>{{ $message }}</p>
-          </span>
-         @enderror
+        @endif  
+        @if ($errors->any())
+          <div class=”alert alert-danger”>
+           @foreach ($errors->all() as $error)
+             <div>{{$error}}</div>
+           @endforeach
+          </div>
+        @endif
         <!-- Main row -->
         <div class="row">
           <section class="col-lg-12 connectedSortable">
@@ -131,8 +133,8 @@
 <!-- Sparkline -->
 <script src="{{ asset('plugins/sparklines/sparkline.js') }}"></script>
 <!-- JQVMap -->
-<script src="{{ asset('plugins/jqvmap/jquery.vmap.min.js') }}"></script>
-<script src="{{ asset('plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
+<!-- <script src="{{ asset('plugins/jqvmap/jquery.vmap.min.js') }}"></script> -->
+<!-- <script src="{{ asset('plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script> -->
 <!-- jQuery Knob Chart -->
 <script src="{{ asset('plugins/jquery-knob/jquery.knob.min.js') }}"></script>
 <!-- daterangepicker -->
@@ -165,7 +167,8 @@
     //Initialize Select2 Elements
     $('.select2bs4').select2({
       theme: 'bootstrap4'
-    })
+    });
+    });
 </script>
 
 @yield('scripts')
