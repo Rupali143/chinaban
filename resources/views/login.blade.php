@@ -64,7 +64,7 @@
         @enderror
         <div class="input-group mb-3">
         @captcha
-          <input type="text" id="captcha" style="border-radius:5px" class="form-controll" name="captcha" autocomplete="off">
+          <input type="text" id="captcha" style="border-radius:5px" class="form-control" name="captcha" autocomplete="off">
           @error('captcha')
           <span class="text-danger errormsg" role="alert">
            <p>{{ $message }}</p>

@@ -17,22 +17,26 @@ class Category extends Model
 
     protected $dates = ['deleted_at'];
 
-
+    //Saved images
     public function image(){
     	return $this->morphOne(Image::class,'imageable');
     }
 
+    // fetched images for edit
     public function getImage(){
         return $this->hasOne(Image::class,'imageable_id','id');
     }
 
-    public function children()
+    //fetched child category
+    public function childs()
 	{
-	    return $this->hasMany(Category::class,'id','parent_category');
+	    return $this->hasMany(Self::class,'parent_category','id');
 	}
 
+	//fetched parent category
 	public function parent()
 	{
-	    return $this->belongsTo(Category::class,'id','parent_category');
+	    return $this->belongsTo(Self::class,'parent_category');
 	}
+
 }

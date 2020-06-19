@@ -17,20 +17,21 @@ Route::get('dashboard','LoginController@dashboard')->name('admin.dashboard.index
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/t', function(){
-    Artisan::call('migrate');
-    Artisan::call('db:seed');
-});
-
 Route::get('/login', 'LoginController@create')->name('admin.login');
 
 Route::post('/login-admin','LoginController@authenticate')->name('login');
 
 Route::middleware('check-login-admin')->group(function () {
-    Route::get('dashboard','LoginController@dashboard')->name('admin.dashboard.index');
+Route::get('dashboard','LoginController@dashboard')->name('admin.dashboard.index');
 });
 
 Route::post('/logout', 'LoginController@logout')->name('admin.logout');
+
+
+/**
+* Route for Category
+*@Author Rupali <rupali.satpute@neosofttech.com>
+*/
 Route::get('/category','CategoryController@index')->name('category');
 
 Route::get('/categoryListing','CategoryController@categoryListing')->name('category.listing');
