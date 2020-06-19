@@ -10,13 +10,14 @@ use DataTables;
 
 class CategoryController extends Controller
 {
-    
+
     /**
-    * Initialize Repository
+    * Repository Initialized
     *@Author Rupali <rupali.satpute@neosofttech.com>
     *
-    * @return \App\Repositories\CategoryRepository
-    */ 
+    * @param  
+    * @return 
+    */
     private $categoryRepository;
 
     public function __construct(CategoryRepository $categoryRepository){
@@ -24,46 +25,52 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display a listing of the Category.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    * Index for Category & Images
+    *@Author Rupali <rupali.satpute@neosofttech.com>
+    *
+    * @param  $null
+    * @return $categories
+    */
     public function index()
     {
         $categories = $this->categoryRepository->all();
         return view('category.index',compact('categories'));
     }
 
+    /**
+    * Listing for  Category & Images
+    *@Author Rupali <rupali.satpute@neosofttech.com>
+    *
+    * @param  null
+    * @return $category with dataTable 
+    */
+
     public function categoryListing(){
-             $categories = $this->categoryRepository->all();
-            return Datatables::of($categories)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($categories){
-                           $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editCategory">Edit</a>';
-                           $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Delete" class="btn btn-danger btn-sm deleteCategory">Delete</a>';
-                            return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+        $categories = $this->categoryRepository->all();
+        $configPath = config('app.file_path');
+        return Datatables::of($categories)
+        ->addIndexColumn()
+        ->addColumn('action', function($categories){
+         $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editCategory">Edit</a>';
+         $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Delete" class="btn btn-danger btn-sm deleteCategory">Delete</a>';
+         return $btn;
+     })
+        ->addColumn('image', function($categories){
+         $image = '<img src="storage/images/'.$categories->image->image_location.'" style="height:50px;width:50px;">';
+         return $image;
+     })
+        ->rawColumns(['action','image'])
+        ->make(true);
     }
 
 
     /**
-     * Show the form for creating a new Category.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created Category in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    * Store  Category & Images
+    *@Author Rupali <rupali.satpute@neosofttech.com>
+    *
+    * @param  $id
+    * @return $category with json
+    */
     public function store(Request $request)
     {
         try {
@@ -75,34 +82,25 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display the specified Category.
-     *
-     * @param  \App\app\Model\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified Category.
-     *
-     * @param  \App\app\Model\Category  $category
-     * @return \Illuminate\Http\Response
-     */
+    * Edit for  Category & Images
+    *@Author Rupali <rupali.satpute@neosofttech.com>
+    *
+    * @param  $id
+    * @return $category with json
+    */
     public function edit($id)
     {
-        $category = Category::find($id);
+        $category = Category::with('getImage','parent')->find($id);
         return response()->json($category);
     }
 
     /**
-     * Remove the specified Category from storage.
-     *
-     * @param  \App\app\Model\Category  $category
-     * @return \Illuminate\Http\Response
-     */
+    *Destroy  Category & Images
+    *@Author Rupali <rupali.satpute@neosofttech.com>
+    *
+    * @param  $id
+    * @return $success message
+    */
     public function destroy($id)
     {
         try {

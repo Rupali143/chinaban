@@ -134,6 +134,15 @@ return [
     |
     */
 
+
+    /*
+    @Author Rupali<rupali.satpute@neosofttech.com>
+    registered constant variable for Image Path
+    */
+    'file_path' => env('FILE_PATH', '/'),
+
+
+
     'providers' => [
 
         /*

@@ -32,6 +32,7 @@ Route::get('/', function () {
 * 
 * @return void
 */
+Route::get('/login', 'LoginController@create')->name('admin.login');
 
 Route::group(['before' => ['check-login-admin']], function() {
     Route::get('/neosoftProject/chinaban/public/login', 'LoginController@create')->name('admin.login');
@@ -50,6 +51,12 @@ Route::middleware('check-login-admin')->group(function () {
     Route::post('/logout', 'LoginController@logout')->name('admin.logout');
 });
 
+
+
+/**
+* Route for Category
+*@Author Rupali <rupali.satpute@neosofttech.com>
+*/
 
 Route::get('/category','CategoryController@index')->name('category');
 
