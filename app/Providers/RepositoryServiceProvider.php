@@ -1,13 +1,12 @@
 <?php
 
 namespace App\Providers;
+use App\Repositories\Admin\AdminRepository;
+use App\Repositories\Admin\AdminInterface;
 use App\Repositories\Product\ProductRepository;
 use App\Repositories\Product\ProductInterface;
 use App\Repositories\User\UserRepository;
 use App\Repositories\User\UserInterface;
-use App\Repositories\User\AdminRepository;
-use App\Repositories\User\AdminInterface;
-
 
 use Illuminate\Support\ServiceProvider;
 
@@ -23,8 +22,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(ProductInterface::class, ProductRepository::class);
         $this->app->bind(AdminInterface::class, AdminRepository::class);
-
-
     }
     
 
@@ -40,10 +37,9 @@ class RepositoryServiceProvider extends ServiceProvider
 
     public function provides() {
         return [
+            AdminInterface::class,
             UserInterface::class,
             ProductInterface::class, 
-            AdminInterface::class, 
-
         ];
     }
 }

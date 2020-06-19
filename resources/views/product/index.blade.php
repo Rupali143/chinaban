@@ -39,30 +39,32 @@
                     @csrf
                     <input type="hidden" name="product_id" id="product_id">
                     <div class="card-body">
-                    <div class="form-group mb-3">
-                      <label>Category</label>
-                      <select class="form-control select2bs4" style="width: 100%;" name="category_id" id="category_id">
-                        <option  value="">Select Category</option>
-                        @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->en_name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                    <div class="form-group mb-3">
-                    <label>Product</label>
-                        <input type="text" class="form-control" placeholder="Enter Product" id="product" name="product">
-                    </div>
-                    @error('product')
-                      <span class="text-danger error" role="alert">
-                      <p>{{ $message }}</p>
-                      </span>
-                    @enderror
-                    <div class="form-group">
-                    <label>Product Detail</label>
+                      <div class="form-group mb-3">
+                        <label>Category</label>
+                        <select class="form-control select2bs4" style="width: 100%;" name="category_id" id="category_id">
+                          <option  value="">Select Category</option>
+                          @foreach($categories as $category)
+                          <option value="{{ $category->id }}">{{ $category->en_name }}</option>
+                          @endforeach
+                        </select>
+                        <span class="text-danger error-category" role="alert">
+                        </span>
+                      </div>
+                      <div class="form-group mb-3">
+                      <label>Product</label>
+                          <input type="text" class="form-control" placeholder="Enter Product" id="product" name="product">
+                          <span class="text-danger error-product" role="alert">
+                          </span> 
+                        </div>
+                      
+                      <div class="form-group mb-3">
+                        <label>Product Detail</label>
                         <input type="text" class="form-control" placeholder="Enter Product Detail" id="product_detail" name="product_detail">
+                        <span class="text-danger error-product-detail" role="alert">
+                        </span>
+                      </div>
                     </div>
-                    </div>
-                    <!-- /.card-body -->
+                      <!-- /.card-body -->
                     <div class="modal-footer justify-content-between">
                       <button type="submit" class="btn btn-primary" id="saveBtn">Submit</button>
                     </div>
@@ -74,41 +76,44 @@
             <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
+        
 @endsection
 @section('scripts')
+    <script type="text/javascript" src="{{ asset('js/product1.js') }}"></script>
+
     <script type="text/javascript">
         $(document).ready(function() {
+          
           $.ajaxSetup({
-                headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
+              headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              }
           });
             var table = $("#productTable").DataTable({
-                processing: true,
-                //serverSide: true,
-                "ajax":{
-                "url": "{{ route('product.listing') }}",
-                "type": "GET",
-          },
-                columns: [
-                    {data: 'en_name', name: 'product'},
-                    {data: 'category_name', name: 'category_name'},
-                    {data: 'product_detail', name: 'product_deatil'},
-                    {data: 'action', name: 'Action'},
-                ]
+              processing: true,
+              //serverSide: false,
+              "ajax":{
+              "url": "{{ route('product.listing') }}",
+              "type": "GET",
+            },
+            columns: [
+                {data: 'en_name', name: 'product'},
+                {data: 'category_name', name: 'category_name'},
+                {data: 'product_detail', name: 'product_deatil'},
+                {data: 'action', name: 'Action'},
+              ]
           });
 
           $('#createProduct').click(function () {
-              $('#saveBtn').val("create-Item");
-              $('#product_id').val('');
-              $('#productForm').trigger("reset");
-              $('#modelHeading').html("Create New Product");
-              $('#modal_product').modal('show');
+            $('#saveBtn').val("create-Item");
+            $('#product_id').val('');
+            $('#productForm').trigger("reset");
+            $('#modelHeading').html("Create New Product");
+            $('#modal_product').modal('show');
           });
 
           $('#saveBtn').click(function (e) {
             var product_id =$('#product_id').val();
-          
               e.preventDefault();
               $.ajax({
                 
@@ -117,8 +122,8 @@
                 type: "POST",
                 dataType: 'json',
                 success: function (data) {
-                    $('#productForm').trigger("reset");
-                    $('#modal_product').modal('hide');
+                  $('#productForm').trigger("reset");
+                  $('#modal_product').modal('hide');
                     if(!product_id){
                       Swal.fire(
                         'Created!',
@@ -132,21 +137,41 @@
                         'Updated!',
                         'Your Product has been Updated.',
                         'success'
-                        ).then(function() {
+                      ).then(function() {
                           window.location.reload();
-                        }); 
+                      }); 
                     }   
                     table.draw();
-                },
-                error: function (data) {
-                    console.log('Error:', data);
-                    $('#saveBtn').html('Submit');
+                 },
+                error:function(result){
+                  if(typeof result.responseJSON.errors.category_id != "undefined"){
+                    let category_id = (result.responseJSON.errors.category_id[0]);
+                    $('.error-category').html(category_id);
+                  }else{
+                    $('.error-category').empty();
+                  }
+                  if(typeof result.responseJSON.errors.product != "undefined"){
+                    let product = (result.responseJSON.errors.product[0]);
+                    $('.error-product').html(product);
+                  }else{
+                    $('.error-product').empty();
+                  }
+                  if(typeof result.responseJSON.errors.product_detail != "undefined"){
+                    let product_detail = (result.responseJSON.errors.product_detail[0]);
+                    $('.error-product-detail').html(product_detail);
+                  }else{
+                    $('.error-product-detail').empty();
+                  }
                 }
               });
           });
 
           $('body').on('click', '.editProduct', function () {
               var product_id = $(this).data('id');
+              $('.error-category').empty();
+              $('.error-product').empty();
+              $('.error-product-detail').empty();
+
               $.get("{{ url('product/edit') }}" +'/' + product_id, function (data) {
                 $('#modelHeading').html("Edit Product");
                 $('#saveBtn').val("edit-user");
@@ -159,7 +184,7 @@
           });
 
           $('body').on('click', '.deleteProduct', function () {
-                var product_id = $(this).data("id");
+              var product_id = $(this).data("id");
                 
               Swal.fire({
               title: 'Are you sure?',
@@ -188,6 +213,6 @@
                 });
               }) 
           });
-        });
-    </script>
+       });
+  </script>
 @endsection

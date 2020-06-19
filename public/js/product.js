@@ -1,42 +1,38 @@
-$.validator.setDefaults({
-  submitHandler: function () {
-    alert( "Form successful submitted!" );
-  }
-});
-$('#productForm').validate({
-  rules: {
-    email: {
-      required: true,
-      email: true,
-    },
-    password: {
-      required: true,
-      minlength: 5
-    },
-    terms: {
-      required: true
-    },
-  },
-  messages: {
-    email: {
-      required: "Please enter a email address",
-      email: "Please enter a vaild email address"
-    },
-    password: {
-      required: "Please provide a password",
-      minlength: "Your password must be at least 5 characters long"
-    },
-    terms: "Please accept our terms"
-  },
-  errorElement: 'span',
-  errorPlacement: function (error, element) {
-    error.addClass('invalid-feedback');
-    element.closest('.form-group').append(error);
-  },
-  highlight: function (element, errorClass, validClass) {
-    $(element).addClass('is-invalid');
-  },
-  unhighlight: function (element, errorClass, validClass) {
-    $(element).removeClass('is-invalid');
-  }
-});
+$(function(){
+  $("#productForm").validate({
+      rules: {
+          product: "required",
+          product_detail: "required",
+          category_id: "required"
+      },
+      messages: {
+        product: {
+          required: "Please enter  product",
+          },
+        category_id: {
+          required: "Please enter  category",
+        },      
+          product_detail: "Please enter product detail"
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.mb-3').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      }     
+  })
+
+  $("#saveBtn").on("click", function(){
+      if($("#productForm").valid()){
+          $("#modal_product").modal("show");
+      } else {
+        console.log('value not entered');
+      }
+      return false;
+  });
+})

@@ -14,7 +14,7 @@ class UserRepository implements UserInterface{
 	}
 	
 	/**
-	* Validate user.
+	* Validate user mobile number.
 	*@author Bharti<bharati.tadvi@neosofttech.com>
 	* 
 	* @param $userRequest
@@ -63,7 +63,13 @@ class UserRepository implements UserInterface{
 		return $rules;
 	}
 	
-	
+	/**
+    * Validate mobile number to sent otp
+    *@Author Bharti <bharati.tadvi@neosofttech.com>
+	*
+    * @param  $data
+    * @return \Illuminate\Http\Response
+	*/
 	public function registerUser($data){
 		$arr['error'] = array();
 		$validationRules = $this->validateUserMobile($data);
@@ -102,6 +108,13 @@ class UserRepository implements UserInterface{
 	}
 
 
+	/**
+    *@Author Bharti <bharati.tadvi@neosofttech.com>
+	*
+    * @param  $data
+    * @return \Illuminate\Http\Response
+	*/
+
 	public function validateMobileOtp($data){
 		$arr['error'] = array();
 		$validationRules = $this->validateMobileOtpRule($data);
@@ -134,7 +147,13 @@ class UserRepository implements UserInterface{
         }		 	
 	}
 
-
+    /**
+	* Save user details
+	*@Author Bharti <bharati.tadvi@neosofttech.com>
+	*
+    * @param  $data
+    * @return \Illuminate\Http\Response
+	*/
 	public function saveUser($data){
 		$arr['error'] = array();
 		$validationRules = $this->validateUser($data);
@@ -173,6 +192,13 @@ class UserRepository implements UserInterface{
 		}		 	
 	}
 
+	/**
+	* Login user 
+	*@Author Bharti <bharati.tadvi@neosofttech.com>
+	*
+    * @param  $requestData
+    * @return \Illuminate\Http\Response
+	*/
 	public function userSignIn($requestData){
 		$arr['error'] = array();
 		$validationRules = $this->validateUserMobile($requestData);
@@ -211,6 +237,13 @@ class UserRepository implements UserInterface{
         }
 	}
 
+	/**
+	* Verify Otp to login 
+	*@Author Bharti <bharati.tadvi@neosofttech.com>
+	*
+    * @param  $requestData
+    * @return \Illuminate\Http\Response
+	*/
 	public function verifyOtp($requestData){
 		$arr['error'] = array();
 		$validationRules = $this->validateMobileOtpRule($requestData);

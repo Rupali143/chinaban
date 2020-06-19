@@ -25,16 +25,26 @@ class ProductController extends Controller
     }
 
     /**
-     * Display a listing of the Product.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    * Index page of product.
+    *@author Bharti<bharati.tadvi@neosofttech.com>
+    * 
+    * @param void
+    * @return void
+    */
     public function index()
     {
         $products = $this->productRepository->all();
         $categories = Category::get();
         return view('product.index',compact('products','categories'));
     }
+
+    /**
+    * Show listing of product.
+    *@author Bharti<bharati.tadvi@neosofttech.com>
+    * 
+    * @param void
+    * @return $products,$btn
+    */
 
     public function productListing(){
         $products = $this->productRepository->all();
@@ -54,10 +64,11 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created Product in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+    * Store a newly created Product in storage.
+    *@author Bharti<bharati.tadvi@neosofttech.com>
+    * 
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
     */
     public function store(Request $request)
     {
@@ -70,10 +81,11 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified Product.
-     *
-     * @param  \App\app\Model\Product  $product
-     * @return \Illuminate\Http\Response
+    * Show the form for editing the specified Product.
+    *@author Bharti<bharati.tadvi@neosofttech.com>
+    *  
+    * @param  $id
+    * @return $product
     */
     public function edit($id)
     {
@@ -84,7 +96,7 @@ class ProductController extends Controller
     /**
      * Remove the specified product from storage.
      *
-     * @param  \App\app\Model\Product  $product
+     * @param  $id
      * @return \Illuminate\Http\Response
     */
     public function destroy($id){
