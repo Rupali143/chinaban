@@ -52,7 +52,6 @@ Route::middleware('check-login-admin')->group(function () {
 });
 
 
-
 /**
 * Route for Category
 *@Author Rupali <rupali.satpute@neosofttech.com>
