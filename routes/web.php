@@ -40,3 +40,15 @@ Route::post('/categoryStore','CategoryController@store')->name('categoryStore');
 Route::get('/categoryEdit/{id}','CategoryController@edit');
 
 Route::get('/categoryDestroy/{id}','CategoryController@destroy');
+
+Route::get('/product','ProductController@index')->name('product.index');
+
+Route::get('/product-index','ProductController@productListing')->name('product.listing');
+
+Route::post('/product-store','ProductController@store')->name('product.store');
+
+Route::get('/product/edit/{id}','ProductController@edit');
+Route::get('/product/destroy/{id}','ProductController@destroy')->name('product.destroy');
+
+
+

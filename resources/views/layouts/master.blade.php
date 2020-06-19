@@ -34,6 +34,8 @@
   <link rel="stylesheet" href="{{ asset('plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/customize.css') }}">
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -52,12 +54,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Dashboard</h1>
+            <h1 class="m-0 text-dark"></h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard v1</li>
+              <li class="breadcrumb-item"><a href="#"></a></li>
+              <li class="breadcrumb-item active"></li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -154,10 +156,12 @@
 <script src="{{ asset('plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
 <!-- jquery-validation -->
 <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
 <!-- Bootstrap4 Duallistbox -->
 <script src="{{ asset('plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js') }}"></script>
 <!-- Select2 -->
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+
 <script>
   $(function () {
     //Initialize Select2 Elements

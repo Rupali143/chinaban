@@ -19,6 +19,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('product.index') }}" class="nav-link">
+              <i class="nav-icon far fa-image"></i>
+              <p>
+                Manage Products
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

@@ -4,3 +4,8 @@
     font-size:90%;
     color:#dc3545;
   }
+  #logout{
+    right: -56px !important;
+    left: inherit !important;
+
+  }

@@ -90,7 +90,7 @@
         <a class="nav-link" data-toggle="dropdown" href="#">
         <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
         </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" id="logout">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a href="{{ url('/logout') }}" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

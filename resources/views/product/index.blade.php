@@ -1,0 +1,193 @@
+    @extends('layouts.master')
+    @section('main-content')
+    <div class="card">
+      <div class="card-header">
+       <h3 class="card-title">Products</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <a href="" class="btn btn-success   btn-sm" href="javascript:void(0)" id="createProduct" data-toggle="modal" data-target="#modal-default" title="Add New Product">
+        <i class="fa fa-plus" aria-hidden="true"></i> Add New
+        </a>
+          <table id="productTable" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Category Name</th>
+                  <th>Product Details</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+          </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+
+        <div class="modal fade" id="modal_product">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="modelHeading"></h4>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form role="form" id="productForm" method="post">
+                    @csrf
+                    <input type="hidden" name="product_id" id="product_id">
+                    <div class="card-body">
+                    <div class="form-group mb-3">
+                      <label>Category</label>
+                      <select class="form-control select2bs4" style="width: 100%;" name="category_id" id="category_id">
+                        <option  value="">Select Category</option>
+                        @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->en_name }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                    <div class="form-group mb-3">
+                    <label>Product</label>
+                        <input type="text" class="form-control" placeholder="Enter Product" id="product" name="product">
+                    </div>
+                    @error('product')
+                      <span class="text-danger error" role="alert">
+                      <p>{{ $message }}</p>
+                      </span>
+                    @enderror
+                    <div class="form-group">
+                    <label>Product Detail</label>
+                        <input type="text" class="form-control" placeholder="Enter Product Detail" id="product_detail" name="product_detail">
+                    </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="modal-footer justify-content-between">
+                      <button type="submit" class="btn btn-primary" id="saveBtn">Submit</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+@endsection
+@section('scripts')
+    <script type="text/javascript">
+        $(document).ready(function() {
+          $.ajaxSetup({
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+          });
+            var table = $("#productTable").DataTable({
+                processing: true,
+                //serverSide: true,
+                "ajax":{
+                "url": "{{ route('product.listing') }}",
+                "type": "GET",
+          },
+                columns: [
+                    {data: 'en_name', name: 'product'},
+                    {data: 'category_name', name: 'category_name'},
+                    {data: 'product_detail', name: 'product_deatil'},
+                    {data: 'action', name: 'Action'},
+                ]
+          });
+
+          $('#createProduct').click(function () {
+              $('#saveBtn').val("create-Item");
+              $('#product_id').val('');
+              $('#productForm').trigger("reset");
+              $('#modelHeading').html("Create New Product");
+              $('#modal_product').modal('show');
+          });
+
+          $('#saveBtn').click(function (e) {
+            var product_id =$('#product_id').val();
+          
+              e.preventDefault();
+              $.ajax({
+                
+                data: $('#productForm').serialize(),
+                url: "{{ route('product.store') }}",
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    $('#productForm').trigger("reset");
+                    $('#modal_product').modal('hide');
+                    if(!product_id){
+                      Swal.fire(
+                        'Created!',
+                        'Your Product has been Created.',
+                        'success'
+                        ).then(function() {
+                          window.location.reload();
+                        });
+                    }else{
+                      Swal.fire(
+                        'Updated!',
+                        'Your Product has been Updated.',
+                        'success'
+                        ).then(function() {
+                          window.location.reload();
+                        }); 
+                    }   
+                    table.draw();
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                    $('#saveBtn').html('Submit');
+                }
+              });
+          });
+
+          $('body').on('click', '.editProduct', function () {
+              var product_id = $(this).data('id');
+              $.get("{{ url('product/edit') }}" +'/' + product_id, function (data) {
+                $('#modelHeading').html("Edit Product");
+                $('#saveBtn').val("edit-user");
+                $('#modal_product').modal('show');
+                $('#product_id').val(data.id);
+                $('#product').val(data.en_name);
+                $('#product_detail').val(data.product_detail);
+                $('#category_id').val(data.category_id);
+              })
+          });
+
+          $('body').on('click', '.deleteProduct', function () {
+                var product_id = $(this).data("id");
+                
+              Swal.fire({
+              title: 'Are you sure?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                $.ajax({
+                  type: "GET",
+                  url: "{{ url('product/destroy') }}"+'/'+product_id,
+                  success: function (data) {
+                  table.draw();
+                  Swal.fire(
+                  'Deleted!',
+                  'Your Product has been deleted.',
+                  'success'
+                  ).then(function() {
+                      window.location.reload();
+                  });              
+                  },
+                  error: function (data) {
+                      console.log('Error:', data);
+                  }
+                });
+              }) 
+          });
+        });
+    </script>
+@endsection
