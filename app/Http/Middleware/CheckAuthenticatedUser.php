@@ -19,10 +19,9 @@ class CheckAuthenticatedUser
 
         $userName = Session::get('username');
         $userId = Session::get('userId');
-       
-        if((isset($userId) && (empty($userId)))){
+        
+        if(!($userId)){
             return redirect()->route('admin.login')->with('error','Unauthorized user');
-
         }
         return $next($request);
     }
