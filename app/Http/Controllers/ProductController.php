@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use App\Model\Product;
 use App\Model\Category;
+use Response;
 use App\Repositories\Product\ProductInterface as ProductInterface;
 
 
@@ -34,7 +35,8 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->productRepository->all();
-        $categories = Category::get();
+        $categories = Category::where('parent_category',NULL)->get();
+        
         return view('product.index',compact('products','categories'));
     }
 
@@ -89,7 +91,7 @@ class ProductController extends Controller
     */
     public function edit($id)
     {
-        $product = Product::find($id);
+        $product = Product::with('category')->find($id);
         return response()->json($product);
     }
 
@@ -106,6 +108,20 @@ class ProductController extends Controller
         }catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], $e->getStatus());
         }
+    }
+
+    /**
+     * Fetch the Subcategory from Parent category.
+     *@author Bharti<bharati.tadvi@neosofttech.com>
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+    */
+    public function getSubCategory(Request $request){
+        $subCategories = $this->productRepository->fetchSubCategory($request);
+        
+        return Response::json($subCategories);
+  
     }
 
 }

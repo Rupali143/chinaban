@@ -3,6 +3,7 @@
 namespace App\Repositories\Product;
 
 use App\Model\Product;
+use App\Model\Category;
 use App\Repositories\Product\ProductInterface;
 use Illuminate\Http\Request;
 
@@ -53,12 +54,12 @@ class ProductRepository implements ProductInterface{
 	public function save($data){
 		$validateRules = $this->validateProduct($data);
 		if(is_null($data->product_id)){
-            $product = Product::create(['en_name'=>$data->product,'category_id'=>$data->category_id,'product_detail'=>$data->product_detail]);
+            $product = Product::create(['en_name'=>$data->product,'category_id'=>$data->subcategory,'product_detail'=>$data->product_detail]);
 			return $product;
 		}else{
 			$updateProduct = Product::updateOrCreate(
 		   	['id' =>  $data->product_id],
-		   	['en_name' =>  $data->product,'product_detail' => $data->product_detail]);
+		   	['en_name' =>  $data->product,'category_id' =>  $data->subcategory,'product_detail' => $data->product_detail]);
 			return $updateProduct;
 		}
   
@@ -68,11 +69,24 @@ class ProductRepository implements ProductInterface{
     * Delete product details
     *@Author Bharti <bharati.tadvi@neosofttech.com>
 	*
-    * @param  $data
-    * @return $product
+    * @param  $id
+    * @return $productDelete
 	*/
 	public function delete($id){
 		$productDelete = Product::find($id)->delete(); 
 		return $productDelete;
+	}
+
+	/**
+    * Fetch subCategory from Parent category
+    *@Author Bharti <bharati.tadvi@neosofttech.com>
+	*
+    * @param  $requestData
+    * @return $subCategories
+	*/
+	public function fetchSubCategory($requestData){
+		$category = $requestData->category_id;
+		$subCategories= Category::where('parent_category', '=', $category)->get();
+		return $subCategories;
 	}
 }

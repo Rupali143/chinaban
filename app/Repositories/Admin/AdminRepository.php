@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Repositories\Admin;
-use App\AdminUser;
+use App\Model\AdminUser;
 use Session;
 use App\Repositories\Admin\AdminInterface as AdminInterface;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+
 
 class AdminRepository implements AdminInterface{
 
@@ -23,17 +25,21 @@ class AdminRepository implements AdminInterface{
 	*/
 	public function authenticateUser($requestData){
 		
-		$status = false;
+		$status = true;
 		$username = $requestData->username;
         $password = $requestData->password;
-        
-		$checkUser = AdminUser::where(['username'=>$username,'password'=>$password])->first();
+		$checkUser = AdminUser::where('username',$username)->first();
 		
-		if ($checkUser){
-			$status =true;
-			Session::put('username',$checkUser->name);
-			Session::put('userId',$checkUser->id);
+		if (!$checkUser) {
+			$status = false;
+			return $status;
+		 }
+		if (!Hash::check($password, $checkUser->password)) {
+			$status = false;
+			return $status;
 		}
+		Session::put('username',$checkUser->name);
+		Session::put('userId',$checkUser->id);
 		return $status;
 	}
 
