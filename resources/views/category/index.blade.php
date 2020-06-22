@@ -6,10 +6,12 @@
      </div>
      <!-- /.card-header -->
      <div class="card-body">
-      <a class="btn btn-success pull-right" href="javascript:void(0)" id="createCategory" data-toggle="modal" data-target="#modal-default"> Add</a>
+      <a class="btn btn-success pull-right btn-sm" href="javascript:void(0)" id="createCategory" data-toggle="modal" data-target="#modal-default" title="Add New Category">
+      <i class="fa fa-plus" aria-hidden="true"></i> Add New</a>
       <table id="categoryTable" class="table table-bordered table-striped">
         <thead>
           <tr>
+            <th>Sr.No.</th>
             <th>Category Name</th>
             <th>Parent Category</th>
             <th>Image</th>
@@ -51,13 +53,13 @@
                 <input type="text" class="form-control" placeholder="Enter Category" id="category" name="category">
               </div>
 
-              <div class="form-group">
+              <div class="form-group imageName">
                 <label>Image</label>
                 <input type="file" class="form-control" id="image" name="image" value="">
               </div>
 
               <div class="form-group">  
-                <img id="imagePath" src="" class="img-responsive" style="height:80px;width:80px;" alt="">
+                <img id="storage_image" src="" class="img-responsive" style="height:80px;width:80px;" alt="">
               </div>
 
             </div>
@@ -92,8 +94,9 @@
           "type": "GET",
         },
         columns: [
+        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
         {data: 'en_name', name: 'Category'},
-        {data: 'parent.en_name', name: 'Parent Category'},
+        {data: 'parent_category', name: 'Parent Category'},
         {data: 'image', name: 'Image'},
         {data: 'action', name: 'Action'},
         ]
@@ -102,7 +105,9 @@
       $('#createCategory').click(function () {
         $('#saveBtn').val("create-Item");
         $('#category_id').val('');
-        $('#imagePath').attr('src', "");
+        $('#storage_image').attr('src', "");
+        $('.imageName').append('');
+        $('#parent_category')[0].selectedIndex = 0;
         $('#categoryForm').trigger("reset");
         $('#modelHeading').html("Create New Category");
         $('#modal_category').modal('show');
@@ -114,28 +119,42 @@
         var parent_category = $('#parent_category');
         var image = $('#image');
         var category_id = $('#category_id');
-
+        var storage_image = $('#hidden_image');
+        
         var formData = new FormData();
         formData.append('category', category.val());
         formData.append('parent_category', parent_category.val());
         formData.append('category_id', category_id.val());
         formData.append('image', image[0].files[0]); 
+        formData.append('storage_image', storage_image.val()); 
+
         $.ajax({
           url: "{{ route('categoryStore') }}",
           type: "POST",
           data: formData,
           processData: false,
           contentType: false,
+          cache:false,
           success: function (data) {
             $('#categoryForm').trigger("reset");
             $('#modal_category').modal('hide');
-            Swal.fire(
-              'Created!',
-              'Your Category has been Created.',
-              'success'
-              ).then(function() {
-                window.location.reload();
-              });
+            if(!category_id){
+                      Swal.fire(
+                        'Created!',
+                        'Your Category has been Created.',
+                        'success'
+                        ).then(function() {
+                          window.location.reload();
+                        });
+                    }else{
+                      Swal.fire(
+                        'Updated!',
+                        'Your Category has been Updated.',
+                        'success'
+                      ).then(function() {
+                          window.location.reload();
+                      }); 
+                    } 
               table.draw();
             },
             error: function (data) {
@@ -147,18 +166,20 @@
 
       $('body').on('click', '.editCategory', function () {
         var category_id = $(this).data('id');
-          $.get("{{ url('categoryEdit') }}" +'/' + category_id, function (data) {
+          $.get("{{ url('category/edit') }}" +'/' + category_id, function (data) {
             var imagePath = data.get_image.image_location;
             var configPath = "{{asset(config('app.file_path'))}}";
-            // alert(data.parent_category);
+            var newOption = new Option(data.parent.en_name, true);
+            var parent_category = $('.select2bs4');
+            // alert(data.parent.en_name);
             $('#modelHeading').html("Edit Category");
             $('#saveBtn').val("edit-user");
             $('#modal_category').modal('show');
             $('#category_id').val(data.id);
             $('#category').val(data.en_name);
-            $('#parent_category').val(data.parent.en_name);
-            $('#imagePath').attr('src', configPath +'/'+ imagePath);
-            $('#image').attr('value',configPath +'/'+ imagePath);
+            $('#storage_image').attr('src', configPath +'/'+ imagePath);
+            $('#storage_image').append("<input type='hidden' name='hidden_image' id='hidden_image' value='"+ imagePath+"''>");
+            parent_category.append(newOption).trigger('change');
           })
         });
 
@@ -174,7 +195,7 @@
         }).then((result) => {
           $.ajax({
             type: "GET",
-            url: "{{ url('categoryDestroy') }}"+'/'+category_id,
+            url: "{{ url('category/destroy') }}"+'/'+category_id,
             success: function (data) {
               table.draw();
               Swal.fire(

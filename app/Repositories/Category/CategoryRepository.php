@@ -1,15 +1,18 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Category;
 
 use App\Model\Category;
-use App\Repositories\Interfaces\CategoryInterface;
-use Illuminate\Support\Facades\DB;
+use App\Repositories\Category\CategoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryRepository implements CategoryInterface{
 
+	public $category;
+
+    function __construct(Category $category) {
+	$this->category = $category;
+    }
 	/**
     * Validation for  Category & Images
     *@Author Rupali <rupali.satpute@neosofttech.com>
@@ -33,7 +36,9 @@ class CategoryRepository implements CategoryInterface{
 	*/
 
 	public function all(){
-		return $category = Category::with('parent','childs','image')->get();
+		return $category = Category::with('parent','childs','image')
+							// ->where('parent_category', '!=', null)
+							->get();
 	}
 
 	/**
@@ -45,7 +50,6 @@ class CategoryRepository implements CategoryInterface{
 	*/
 	public function save($data){
 		if(is_null($data->category_id)){ 
-
 			$result = $this->validateCategory($data);
 
 			if ($image = $data->file('image')) {
@@ -68,13 +72,19 @@ class CategoryRepository implements CategoryInterface{
 			return $category;
 		}
 		else{
+			$oldImageName = $data->storage_image;
+			$image = $data->file('image');
 
-			if ($image = $data->file('image')) {
+			if($image != ''){
+				// if ($image = $data->file('image')) {
 				$destinationPath = storage_path('app/public/images');
 				$extension = $image->getClientOriginalExtension();
 				$imageName = $image->getClientOriginalName();
 				$imageConvertName = md5(uniqid($imageName)).'.'.$extension;
 				$image->move($destinationPath, $imageConvertName);
+			// }
+			}else{
+				$imageConvertName = $oldImageName;
 			}
 			$category = Category::findOrFail($data->category_id);
 			$category->en_name = $data->category;
@@ -82,7 +92,7 @@ class CategoryRepository implements CategoryInterface{
 			$category->update();
 			$category->image->update(['image_location' => $imageConvertName,
 				'imageable_id' => $data->category_id]);
-			return $category;
+			return $category;		
 		}
 
 
@@ -98,6 +108,7 @@ class CategoryRepository implements CategoryInterface{
 	public function delete($id){
 		$category = Category::with('image')->find($id);
 		$image_path = storage_path('app/public/images').'/'.$category->image->image_location;
+		// dd($image_path);
 		unlink($image_path);
 		$category->delete();
 		return $category;

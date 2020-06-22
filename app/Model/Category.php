@@ -9,7 +9,7 @@ class Category extends Model
 {
 	use SoftDeletes;
 
-	protected $guarded = [];
+	// protected $guarded = [];
 	
 	protected $table = 'categories';
 
@@ -36,7 +36,7 @@ class Category extends Model
 	//fetched parent category
 	public function parent()
 	{
-	    return $this->belongsTo(Self::class,'parent_category');
+	    return $this->belongsTo(Self::class,'parent_category','id');
 	}
 
 }

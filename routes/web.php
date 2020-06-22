@@ -52,16 +52,17 @@ Route::middleware('check-login-admin')->group(function () {
 *@Author Rupali <rupali.satpute@neosofttech.com>
 */
 
-Route::get('/category','CategoryController@index')->name('category');
+Route::group(['middleware' => ['check-login-admin'], 'prefix' => 'category'], function(){
+Route::get('/','CategoryController@index')->name('category');
 
-Route::get('/categoryListing','CategoryController@categoryListing')->name('category.listing');
+Route::get('/listing','CategoryController@categoryListing')->name('category.listing');
 
-Route::post('/categoryStore','CategoryController@store')->name('categoryStore');
+Route::post('/store','CategoryController@store')->name('categoryStore');
 
-Route::get('/categoryEdit/{id}','CategoryController@edit');
+Route::get('/edit/{id}','CategoryController@edit');
 
-Route::get('/categoryDestroy/{id}','CategoryController@destroy');
-
+Route::get('/destroy/{id}','CategoryController@destroy')->name('category.destroy');
+});
 /**
 * Routes for product.
 * @author Bharti<bharati.tadvi@neosofttech.com>

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Category;
 use Illuminate\Http\Request;
-use App\Repositories\CategoryRepository;
+use App\Repositories\Category\CategoryInterface as CategoryInterface;
 use DataTables;
 
 
@@ -20,7 +20,7 @@ class CategoryController extends Controller
     */
     private $categoryRepository;
 
-    public function __construct(CategoryRepository $categoryRepository){
+    public function __construct(CategoryInterface $categoryRepository){
         $this->categoryRepository = $categoryRepository;
     }
 
@@ -47,6 +47,7 @@ class CategoryController extends Controller
 
     public function categoryListing(){
         $categories = $this->categoryRepository->all();
+        // dd($categories->toArray());
         $configPath = config('app.file_path');
         return Datatables::of($categories)
         ->addIndexColumn()
@@ -59,9 +60,18 @@ class CategoryController extends Controller
          $image = '<img src="storage/images/'.$categories->image->image_location.'" style="height:50px;width:50px;">';
          return $image;
      })
-        ->rawColumns(['action','image'])
+        ->editColumn('parent_category', function($categories) {
+            if(is_null($categories->parent)){
+                return "Parent";
+            }else{
+                return $categories->parent->en_name;
+            }
+                    
+        })
+        ->rawColumns(['action','image','parent_category'])
         ->make(true);
     }
+
 
 
     /**
@@ -73,6 +83,7 @@ class CategoryController extends Controller
     */
     public function store(Request $request)
     {
+       
         try {
             $categories = $this->categoryRepository->save($request);
             return response()->json(['success'=>'Category saved successfully.']);
