@@ -73,8 +73,9 @@ Route::group(['middleware' => ['check-login-admin'], 'prefix' => 'product'], fun
     Route::get('/','ProductController@index')->name('product.index');
     Route::get('/index','ProductController@productListing')->name('product.listing');
     Route::post('/store','ProductController@store')->name('product.store');
-    Route::get('/edit/{id}','ProductController@edit');
+    Route::get('/edit/{id}','ProductController@edit')->name('product.edit');
     Route::get('/destroy/{id}','ProductController@destroy')->name('product.destroy');
+    Route::get('/get/subcategories','ProductController@getSubCategory')->name('getSubCategory');
 });
 
 

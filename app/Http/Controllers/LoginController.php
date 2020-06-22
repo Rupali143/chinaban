@@ -86,7 +86,7 @@ class LoginController extends Controller
     * @return void
     */
     public function logout(Request $request) {
-        
+     
        $logOutUser = $this->adminRepository->logOutUser($request);
        return redirect()->route('admin.login');      
     }    

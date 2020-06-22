@@ -5,19 +5,19 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Product extends Model
+class AdminUser extends Model
 {
-    
     use SoftDeletes;
 
-    protected $table = 'products';
+    
+    protected $table = 'admin_user';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    public $fillable = ['id','en_name','category_id','product_detail'];
+    public $fillable = ['id','username','password'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -25,9 +25,4 @@ class Product extends Model
      * @var array
     */
     protected $hidden = ['created_at', 'updated_at'];
-
-    public function category()
-    {
-        return $this->belongsTo('App\Model\Category');
-    }
 }

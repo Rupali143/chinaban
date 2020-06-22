@@ -3,16 +3,18 @@ $(function(){
       rules: {
           product: "required",
           product_detail: "required",
-          category_id: "required"
+          category_id: "required",
+          subcategory:"required"
       },
       messages: {
         product: {
           required: "Please enter  product",
           },
         category_id: {
-          required: "Please enter  category",
+          required: "Please enter  Parent category",
         },      
-          product_detail: "Please enter product detail"
+          product_detail: "Please enter product detail",
+          subcategory: "Please enter Category"
       },
       errorElement: 'span',
       errorPlacement: function (error, element) {
@@ -27,12 +29,4 @@ $(function(){
       }     
   })
 
-  $("#saveBtn").on("click", function(){
-      if($("#productForm").valid()){
-          $("#modal_product").modal("show");
-      } else {
-        console.log('value not entered');
-      }
-      return false;
-  });
 })

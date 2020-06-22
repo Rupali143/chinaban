@@ -1,7 +1,7 @@
 <?php 
 
 namespace App\Repositories\Admin;
-use App\AdminUser;
+use App\Model\AdminUser;
 use Illuminate\Http\Request;
 
 interface AdminInterface{ 

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\AdminUser;
+use App\Model\AdminUser;
 
 class AdminUserTableSeeder extends Seeder
 {
@@ -14,20 +14,20 @@ class AdminUserTableSeeder extends Seeder
     {
         $adminUsers =[
             [
-             'username'=>'Bharti',
-             'password'=>'bharti123',
+             'username'=>'Admin',
+             'password'=> bcrypt('admin123'),
              'created_at'=>'2020-04-17 04:42:08',
              'updated_at'=>'2020-04-17 04:42:08'
             ],
             [
-             'username'=>'Rupali',
-             'password'=>'rupali123',
+             'username'=>'Expert',
+             'password'=> bcrypt('expert123'),
              'created_at'=>'2020-04-17 04:42:08',
              'updated_at'=>'2020-04-17 04:42:08'
             ],
             [
-             'username'=>'Binal',
-             'password'=>'Binal123',
+             'username'=>'Vendor',
+             'password'=> bcrypt('vendor123'),
              'created_at'=>'2020-04-17 04:42:08',
              'updated_at'=>'2020-04-17 04:42:08'
             ]

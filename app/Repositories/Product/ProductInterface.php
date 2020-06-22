@@ -9,4 +9,5 @@ interface ProductInterface{
 	public function all();
 	public function save($data);
 	public function delete($id);
+	public function fetchSubCategory($requestData);
 }
