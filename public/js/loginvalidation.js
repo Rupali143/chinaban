@@ -1,9 +1,9 @@
 $(document).ready(function () {
-    $.validator.setDefaults({
-      submitHandler: function () {
-        console.log( "Form successful submitted!" );
-      }
-    });
+    // $.validator.setDefaults({
+    //   submitHandler: function () {
+    //     console.log( "Form successful submitted!" );
+    //   }
+    // });
     $('#loginForm').validate({
       rules: {
           username: {

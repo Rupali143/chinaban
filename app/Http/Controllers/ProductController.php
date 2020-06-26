@@ -50,7 +50,7 @@ class ProductController extends Controller
 
     public function productListing(){
         $products = $this->productRepository->all();
-        
+        // dd($products);
         return Datatables::of($products)
         ->addIndexColumn()
         ->addColumn('category_name', function($products){
@@ -92,6 +92,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::with('category')->find($id);
+        // dd($product->toArray());
         return response()->json($product);
     }
 

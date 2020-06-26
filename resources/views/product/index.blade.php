@@ -208,7 +208,6 @@
 
       $('body').on('click', '.deleteProduct', function () {
           var product_id = $(this).data("id");
-            
           Swal.fire({
           title: 'Are you sure?',
           icon: 'warning',
@@ -216,24 +215,34 @@
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
           confirmButtonText: 'Yes, delete it!'
-          }).then((result) => {
+          }).then((e) => {
+            if(e.value === true){
             $.ajax({
               type: "GET",
               url: "{{ url('product/destroy') }}"+'/'+product_id,
               success: function (data) {
-              table.draw();
+              // table.draw();
+              if(data){
               Swal.fire(
               'Deleted!',
               'Your Product has been deleted.',
               'success'
               ).then(function() {
                   window.location.reload();
-              });              
+              }); 
+              }else{
+                  Swal.fire({
+                    title : 'Opps...',
+                    text : 'Something wrong!',
+                    icon : 'error',
+                    timer : '1500'
+                  });
+              }            
               },
-              error: function (data) {
-                  console.log('Error:', data);
-              }
             });
+            }else{
+              Swal.fire("Your product is Safe!!");
+            }
           }) 
       });
 

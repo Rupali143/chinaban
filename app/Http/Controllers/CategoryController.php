@@ -102,6 +102,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::with('getImage','parent')->find($id);
+        // dd($category->parent);
         return response()->json($category);
     }
 

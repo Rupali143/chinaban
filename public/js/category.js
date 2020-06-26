@@ -10,17 +10,11 @@
   $(function(){
     $("#categoryForm").validate({
       rules: {
-        parent_category: {
-          required: true,
-        },
         category: "required",
         image: "required"
 
       },
       messages: {
-       parent_category: {
-        required: "Please enter a Parent category",
-      },
       category: {
         required: "Please provide a category",
       },

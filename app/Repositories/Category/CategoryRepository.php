@@ -36,7 +36,7 @@ class CategoryRepository implements CategoryInterface{
 	*/
 
 	public function all(){
-		return $category = Category::with('parent','childs','image')
+		return $category = Category::with('parent','child','image')
 							// ->where('parent_category', '!=', null)
 							->get();
 	}

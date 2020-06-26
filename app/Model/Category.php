@@ -28,7 +28,7 @@ class Category extends Model
     }
 
     //fetched child category
-    public function childs()
+    public function child()
 	{
 	    return $this->hasMany(Self::class,'parent_category','id');
 	}

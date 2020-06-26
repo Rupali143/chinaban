@@ -61,7 +61,7 @@ Route::post('/store','CategoryController@store')->name('categoryStore');
 
 Route::get('/edit/{id}','CategoryController@edit');
 
-Route::get('/destroy/{id}','CategoryController@destroy')->name('category.destroy');
+Route::post('/destroy/{id}','CategoryController@destroy')->name('category.destroy');
 });
 /**
 * Routes for product.

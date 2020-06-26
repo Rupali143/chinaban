@@ -68,11 +68,6 @@
               </div>
             </div>
             @endif
-            @error('captcha')
-            <span class="text-danger errormsg" role="alert">
-            <p>{{ $message }}</p>
-            </span>
-            @enderror
             @if ($errors->any())
             <div class=”alert alert-danger”>
               @foreach ($errors->all() as $error)
