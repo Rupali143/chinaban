@@ -10,14 +10,22 @@
   $(function(){
     $("#categoryForm").validate({
       rules: {
-        category: "required",
+        category: {
+          required:true,
+          remote:{
+                    url:"/checkCategory",
+                    type:"post",
+               }
+             },
         image: "required"
 
       },
       messages: {
-      category: {
-        required: "Please provide a category",
-      },
+      category:{
+                required: "Please provide a category",
+                remote: "This category already exits."
+          },
+      
       image: {
         required: "Please provide a Image",
       },

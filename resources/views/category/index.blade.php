@@ -3,11 +3,11 @@
     <div class="card">
       <div class="card-header">
        <h3 class="card-title">Categories</h3>
-     </div>
-     <!-- /.card-header -->
-     <div class="card-body">
-      <a class="btn btn-success pull-right btn-sm" href="javascript:void(0)" id="createCategory" data-toggle="modal" data-target="#modal-default" title="Add New Category">
+       <a class="btn btn-success float-right btn-sm" href="javascript:void(0)" id="createCategory" data-toggle="modal" data-target="#modal-default" title="Add New Category">
         <i class="fa fa-plus" aria-hidden="true"></i> Add New</a>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
         <table id="categoryTable" class="table table-bordered table-striped">
           <thead>
             <tr>
@@ -42,7 +42,7 @@
                 <div class="form-group">
                   <label>Parent Category</label>
                   <select class="form-control select2bs4" style="width: 100%;" name="parent_category" id="parent_category">
-                    <option value="">Parent</option>
+                    <option value="0">Parent</option>
                     @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->en_name }}</option>
                     @endforeach
@@ -129,6 +129,9 @@
 
     $('#saveBtn').click(function (e) {
       e.preventDefault();
+
+      $("#saveBtn").attr("disabled", true);
+      
       var category = $('#category');
       var parent_category = $('#parent_category');
       var image = $('#image');
@@ -152,13 +155,14 @@
         success: function (data) {
           $('#categoryForm').trigger("reset");
           $('#modal_category').modal('hide');
+          // alert(category_id);
           if(!category_id){
             Swal.fire(
               'Created!',
               'Your Category has been Created.',
               'success'
               ).then(function() {
-                window.location.reload();
+                $("#categoryTable").DataTable().ajax.reload();
               });
             }else{
               Swal.fire(
@@ -166,7 +170,7 @@
                 'Your Category has been Updated.',
                 'success'
                 ).then(function() {
-                  window.location.reload();
+                  $("#categoryTable").DataTable().ajax.reload();
                 }); 
               } 
               table.draw();
@@ -181,6 +185,7 @@
     $('body').on('click', '.editCategory', function () {
       var category_id = $(this).data('id');
       $.get("{{ url('category/edit') }}" +'/' + category_id, function (data) {
+        // alert(data.parent);
         var imagePath = data.get_image.image_location;
         var configPath = "{{asset(config('app.file_path'))}}";
         $('#modelHeading').html("Edit Category");
@@ -217,10 +222,10 @@
                   'Your Category has been deleted.',
                   'success'
                   ).then(function() {
-                    window.location.reload();
+                    $("#categoryTable").DataTable().ajax.reload();
+                    // window.location.reload();
                   });
                 }else{
-                  // console.log('Error:', data);
                   Swal.fire({
                     title : 'Opps...',
                     text : 'Something wrong!',

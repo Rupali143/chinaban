@@ -4,20 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategoriesTable extends Migration
+class CreateKnowAboutProductTable extends Migration
 {
     /**
      * Run the migrations.
-     @author Rupali <rupali.satpute@neosofttech.com>
-     @return void
+     *
+     * @return void
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('know_about_product', function (Blueprint $table) {
             $table->Increments('id');
-            $table->string('en_name',50);
-            $table->integer('parent_category')->default(0);
-            $table->dateTime('created_at');
+            $table->string('en_name',100);
+            $table->dateTime('created_at'); 
             $table->dateTime('updated_at');
             $table->softDeletes()->nullable(1);
         });
@@ -30,6 +29,6 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('know_about_products');
     }
 }

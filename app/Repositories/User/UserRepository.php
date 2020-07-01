@@ -2,6 +2,9 @@
 
 namespace App\Repositories\User;
 use App\Model\User;
+use App\Model\UserProduct;
+use App\Model\Product;
+use App\Model\KnowAboutProduct;
 use App\Repositories\User\UserInterface as UserInterface;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,7 +26,8 @@ class UserRepository implements UserInterface{
     protected function validateUserMobile($userRequest){
 
         $rules = [
-			'mobile_number' => 'required',
+			'mobile_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+
 		];
 		return $rules;
     }
@@ -38,7 +42,7 @@ class UserRepository implements UserInterface{
     protected function validateMobileOtpRule($userRequest){
 
         $rules = [
-			'mobile_number' => 'required',
+			'mobile_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
 			'otp' => 'required',
 		];
 		return $rules;
@@ -54,10 +58,9 @@ class UserRepository implements UserInterface{
     protected function validateUser($userRequest){
 
         $rules = [
-			'mobile_number' => 'required',
+			'mobile_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
 			'name' => 'required',
 			'dob' => 'required',
-            'know_about_product' => 'required',
             'is_manufacture' => 'required',
 		];
 		return $rules;
@@ -70,7 +73,7 @@ class UserRepository implements UserInterface{
     * @param  $data
     * @return \Illuminate\Http\Response
 	*/
-	public function registerUser($data){
+	public function registerUser1($data){
 		$arr['error'] = array();
 		$validationRules = $this->validateUserMobile($data);
         $validator = Validator::make($data->all(), $validationRules);
@@ -123,8 +126,8 @@ class UserRepository implements UserInterface{
         if ($validator->fails())
         {   
             return response()->json([
-				'success' => false,
-				'is_expired'=>false,
+				'code' => "404",
+				// 'is_expired'=>false,
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
             ]);
@@ -132,14 +135,14 @@ class UserRepository implements UserInterface{
         {
 			if($data->otp == "1234"){
 				return response()->json([
-					'success' => true,
-					'message' => "OTP verified successfully",
+					'code' => 200,
+					'message' => "OTP verified Successfully!!",
 					'data'    => []
 				]);
 			}else{
 				$arrError['error'] = ['OTP does not match.'];
 				return response()->json([
-					'success' => false,
+					'code' => "400",
 					'message' => "Otp does not match",
 					'data'    => $arrError
 				]);
@@ -154,7 +157,7 @@ class UserRepository implements UserInterface{
     * @param  $data
     * @return \Illuminate\Http\Response
 	*/
-	public function saveUser($data){
+	public function saveUser1($data){
 		$arr['error'] = array();
 		$validationRules = $this->validateUser($data);
 		
@@ -279,5 +282,98 @@ class UserRepository implements UserInterface{
 				]);
 			} 
         }	
+	}
+
+
+
+	//Chanages rupali
+
+	public function registerUser($data){ 
+		$arr['error'] = array();
+		$validationRules = $this->validateUserMobile($data->mobile_number);
+        $validator = Validator::make($data->all(), $validationRules);
+        /*Check for the validations*/
+        if ($validator->fails())
+        {   
+            return response()->json([
+				'code' => "412",
+				// 'is_expired'=>false,
+				'message' => 'validation failed',
+				'data'    => $validator->errors(),
+            ]);
+		}else
+        {  
+			$msg = '';
+			$userObj = User::where('mobile_number',$data->mobile_number)->first();
+		
+			if($userObj){
+				$arrError['error'] = ['Mobile number is already exist.'];
+				return response()->json([
+					'code' => "201",
+					'message' => "Mobile number is already exist",
+					'data'    => $arrError
+				]);		
+			}else{
+				$phoneNumber = ['Mobile number'=>$data->mobile_number];
+				$msg = "Hi,". " Your OTP is 1234";
+				return response()->json([
+					'code' => "200",
+					'message' => $msg,
+					'data'    => $phoneNumber
+				]); 		
+			}	       
+        }		 	
+	}
+
+	public function saveUser($data){ //dd($data->all());
+		$arr['error'] = array();
+		$validationRules = $this->validateUser($data);
+        $validator = Validator::make($data->all(), $validationRules);
+        /*Check for the validations*/
+        if ($validator->fails())
+        {   
+            return response()->json([
+				'code' => "412",
+				// 'is_expired'=>false,
+				'message' => 'validation failed',
+				'data'    => $validator->errors(),
+            ]);
+		}else
+        {
+			
+			$user = User::create(['mobile_number'=>$data->mobile_number,'name'=>$data->name,'dob'=>$data->dob,'is_manufacture'=>$data->is_manufacture]);			
+			
+			$storeKnowAboutProduct = KnowAboutProduct::create(
+				['en_name' => $data->know_about_product]);
+			
+			// $storeProduct = new UserProduct;
+			$userProductSave = $data->get('domain_category');
+
+			foreach ($userProductSave as $value) { 
+			 	$storeProduct = Product::create(
+			 		['en_name' => $value['product_name'],
+			 		 'category_id' => $value['category'],
+			 		 'product_detail' => $value['product_details']
+			 		]);
+			}
+			
+
+			if($user)
+            {
+				return response()->json([
+					'code' => "200",
+					// 'is_expired'=>false,
+					'message' => "Registartion done successfully",
+					'data'    => $user
+				]);
+            }else{
+				return response()->json([
+					'code' => "412",
+					// 'is_expired'=>false,
+					'message' => "Registartion not done successfully",
+					'data'    => []
+				]);
+            }           
+		}		 	
 	}
 }

@@ -35,8 +35,8 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->productRepository->all();
-        $categories = Category::where('parent_category',NULL)->get();
-        
+        // $categories = Category::where('parent_category',NULL)->get();
+        $categories = Category::all();
         return view('product.index',compact('products','categories'));
     }
 

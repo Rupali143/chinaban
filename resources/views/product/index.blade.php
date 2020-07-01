@@ -3,12 +3,12 @@
 <div class="card">
    <div class="card-header">
       <h3 class="card-title">Products</h3>
+      <a href="" class="btn btn-success btn-sm float-right" href="javascript:void(0)" id="createProduct" data-toggle="modal" data-target="#modal-default" title="Add New Product">
+      <i class="fa fa-plus" aria-hidden="true"></i> Add New
+      </a>
    </div>
    <!-- /.card-header -->
    <div class="card-body">
-      <a href="" class="btn btn-success   btn-sm" href="javascript:void(0)" id="createProduct" data-toggle="modal" data-target="#modal-default" title="Add New Product">
-      <i class="fa fa-plus" aria-hidden="true"></i> Add New
-      </a>
       <table id="productTable" class="table table-bordered table-striped">
          <thead>
             <tr>
@@ -202,7 +202,7 @@
             $('#product_detail').val(data.product_detail);
             $('#category_id').attr('data-subcategory',data.category.id);
             $('#category_id').val(data.category.parent_category).trigger('change');
-            $('#subCategory').append('<option value="' + data.category_id + '">' + data.en_name + '</option>').attr("selected", "selected");
+            $('#subCategory').append('<option value="' + data.category.id + '">' + data.category.en_name + '</option>').attr("selected", "selected");
           })
       });
 

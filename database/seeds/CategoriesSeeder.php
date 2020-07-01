@@ -12,11 +12,6 @@ class CategoriesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('categories')->insert([
-            'en_name' => 'dell',
-            'created_at' => date("Y-m-d H:i:s"),
-			'updated_at' => date("Y-m-d H:i:s"),
-            
-        ]);
+        
     }
 }

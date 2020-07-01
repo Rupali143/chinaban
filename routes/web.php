@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -80,3 +81,10 @@ Route::group(['middleware' => ['check-login-admin'], 'prefix' => 'product'], fun
 
 
 
+
+Route::post('/checkCategory','CategoryController@checkCategoryExist');
+
+Route::get('/test',function(){
+
+    return view('test');
+});

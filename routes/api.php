@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+* Routes for API.
+* @author Bharti<bharati.tadvi@neosofttech.com>
+*/
+
 Route::group(['prefix' => 'v1','namespace' => 'Api\v1'], function () {
     Route::POST('/validate-mobile','RegisterController@validateMobile')->name('register.user');
     Route::POST('/validate-mobile-otp','RegisterController@validateOtp')->name('user.otp');
@@ -22,8 +27,18 @@ Route::group(['prefix' => 'v1','namespace' => 'Api\v1'], function () {
     Route::POST('/verify-otp','LoginController@verifyUserOtp')->name('verify.otp');
 
 
+/**
+* Routes for API.
+* @author Rupali<rupali.satpute@neosofttech.com>
+*/
+    Route::get('/fetch-category','ApiCategoryController@fetchCategory')->name('fetch.category');
+    Route::POST('/fetch-subcategory','ApiCategoryController@fetchSubcategory')->name('fetch.subcategory');
+
 
 });
+
+
+
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

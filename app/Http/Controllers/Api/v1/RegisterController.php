@@ -45,7 +45,7 @@ class RegisterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return $validateOtp
     */
-    public function validateOtp(Request $request){
+    public function validateOtp(Request $request){ 
         $validateOtp = $this->userRepository->validateMobileOtp($request);
         return $validateOtp;
     }
@@ -58,6 +58,7 @@ class RegisterController extends Controller
      * @return $validateOtp
     */
     public function saveUserDetail(Request $request){
+        // dd($request->all());
         try {
             $saveUser = $this->userRepository->saveUser($request);
             return $saveUser;

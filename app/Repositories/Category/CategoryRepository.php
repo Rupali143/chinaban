@@ -10,9 +10,9 @@ class CategoryRepository implements CategoryInterface{
 
 	public $category;
 
-    function __construct(Category $category) {
-	$this->category = $category;
-    }
+	function __construct(Category $category) {
+		$this->category = $category;
+	}
 	/**
     * Validation for  Category & Images
     *@Author Rupali <rupali.satpute@neosofttech.com>
@@ -22,7 +22,7 @@ class CategoryRepository implements CategoryInterface{
 	*/
 	protected function validateCategory($categoryRequest){
 		$validateData = $categoryRequest->validate([
-			'category' => 'required',
+			'category' => 'required|unique:categories,en_name',
 			'image' => 'required|mimes:jpeg,jpg,png|max:1024',
 		]);
 	}
@@ -38,7 +38,7 @@ class CategoryRepository implements CategoryInterface{
 	public function all(){
 		return $category = Category::with('parent','child','image')
 							// ->where('parent_category', '!=', null)
-							->get();
+		->get();
 	}
 
 	/**
@@ -113,4 +113,44 @@ class CategoryRepository implements CategoryInterface{
 		$category->delete();
 		return $category;
 	}
+
+
+//API Start
+
+	/**
+    * Fetch Category For API
+    *@Author Rupali <rupali.satpute@neosofttech.com>
+	*
+    * @param  
+    * @return $category in JSON format
+	*/
+
+	public function getCategory(){
+		$category = Category::all();
+		return response()->json([
+			'code' => '200',
+			'message' => 'Category fetched Successfully!!',
+			'data'    => $category
+		]);
+	}
+
+	/**
+    * Fetch Sub- Category For API
+    *@Author Rupali <rupali.satpute@neosofttech.com>
+	*
+    * @param  $id
+    * @return $category in JSON format
+	*/
+
+	public function fetchSubcategory($id){
+		$category = Category::with('child')
+					->where('parent_category','=',$id)
+					->get();
+		return response()->json([
+			'code' => '200',
+			'message' => 'Sub-Category fetched Successfully!!',
+			'data'    => $category
+		]);
+	}
+
 }

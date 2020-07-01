@@ -36,7 +36,7 @@ class Category extends Model
 	//fetched parent category
 	public function parent()
 	{
-	    return $this->belongsTo(Self::class,'parent_category','id');
+	    return $this->belongsTo(Self::class,'parent_category');
 	}
 
 }

@@ -52,21 +52,21 @@ class CategoryController extends Controller
         return Datatables::of($categories)
         ->addIndexColumn()
         ->addColumn('action', function($categories){
-         $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editCategory">Edit</a>';
-         $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Delete" class="btn btn-danger btn-sm deleteCategory">Delete</a>';
-         return $btn;
-     })
+           $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editCategory">Edit</a>';
+           $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$categories->id.'" data-original-title="Delete" class="btn btn-danger btn-sm deleteCategory">Delete</a>';
+           return $btn;
+       })
         ->addColumn('image', function($categories){
-         $image = '<img src="storage/images/'.$categories->image->image_location.'" style="height:50px;width:50px;">';
-         return $image;
-     })
+           $image = '<img src="storage/images/'.$categories->image->image_location.'" style="height:50px;width:50px;">';
+           return $image;
+       })
         ->editColumn('parent_category', function($categories) {
             if(is_null($categories->parent)){
                 return "Parent";
             }else{
                 return $categories->parent->en_name;
             }
-                    
+
         })
         ->rawColumns(['action','image','parent_category'])
         ->make(true);
@@ -83,7 +83,7 @@ class CategoryController extends Controller
     */
     public function store(Request $request)
     {
-       
+
         try {
             $categories = $this->categoryRepository->save($request);
             return response()->json(['success'=>'Category saved successfully.']);
@@ -102,7 +102,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::with('getImage','parent')->find($id);
-        // dd($category->parent);
+        // dd($category);
         return response()->json($category);
     }
 
@@ -122,4 +122,16 @@ class CategoryController extends Controller
             return response()->json(['message' => $e->getMessage()], $e->getStatus());
         }
     }
+
+
+    public function checkCategoryExist(Request $request){
+        $category = Category::all()->where('en_name',$request->category)
+                                   // ->where('deleted_at','=',NULL)
+                                   ->first();
+        if ($category) {
+           return response()->json($request->category.' is already taken');
+       } else {
+           return response()->json($request->category.' is available');
+       }
+   }
 }
