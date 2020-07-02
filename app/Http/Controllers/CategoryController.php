@@ -83,6 +83,7 @@ class CategoryController extends Controller
     */
     public function store(Request $request)
     {
+        // dd($request->all());
 
         try {
             $categories = $this->categoryRepository->save($request);
@@ -128,6 +129,7 @@ class CategoryController extends Controller
         $category = Category::all()->where('en_name',$request->category)
                                    // ->where('deleted_at','=',NULL)
                                    ->first();
+                                   // dd($request);
         if ($category) {
            return response()->json($request->category.' is already taken');
        } else {

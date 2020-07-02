@@ -23,6 +23,7 @@ class CategoryRepository implements CategoryInterface{
 	protected function validateCategory($categoryRequest){
 		$validateData = $categoryRequest->validate([
 			'category' => 'required|unique:categories,en_name',
+			// regex:[A-Za-z1-9 ]
 			'image' => 'required|mimes:jpeg,jpg,png|max:1024',
 		]);
 	}
@@ -48,8 +49,8 @@ class CategoryRepository implements CategoryInterface{
     * @param  $data
     * @return $category
 	*/
-	public function save($data){
-		if(is_null($data->category_id)){ 
+	public function save($data){ 
+		if(!($data->category_id)){ //dd($data->all());
 			$result = $this->validateCategory($data);
 
 			if ($image = $data->file('image')) {
@@ -71,7 +72,7 @@ class CategoryRepository implements CategoryInterface{
 				'imageable_id' => $lastId]);
 			return $category;
 		}
-		else{
+		else{ //dd("else");
 			$oldImageName = $data->storage_image;
 			$image = $data->file('image');
 

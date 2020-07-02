@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Image extends Model
 {
 	use SoftDeletes;
-	// protected $guarded = [];
 
+	protected $table = 'images';
+	
 	protected $fillable = [
 		'image', 'imageable_id', 'imageable_type','image_location'
 	];
+
+	protected $dates = ['deleted_at'];
 
 	public function imageable(){
 		return $this->morphTo();

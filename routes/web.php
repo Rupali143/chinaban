@@ -32,6 +32,7 @@ Route::get('/login', 'LoginController@create')->name('admin.login');
 
 Route::group(['before' => ['check-login-admin']], function() {
     Route::get('/neosoftProject/chinaban/public/login', 'LoginController@create')->name('admin.login');
+    Route::get('/neosoftProject/chinaban/public', 'LoginController@create')->name('admin.login');
    
 });
 Route::post('/login-admin','LoginController@authenticate')->name('login');
@@ -58,7 +59,8 @@ Route::get('/','CategoryController@index')->name('category');
 
 Route::get('/listing','CategoryController@categoryListing')->name('category.listing');
 
-Route::post('/store','CategoryController@store')->name('categoryStore');
+Route::post('/store','CategoryController@store')->name('categoryStore')
+->middleware('xss');
 
 Route::get('/edit/{id}','CategoryController@edit');
 
