@@ -18,7 +18,6 @@ class CreateUsersTable extends Migration
             $table->string('mobile_number')->length('10');
             $table->string('name')->length('100');
             $table->date('dob');
-            $table->integer('know_about_product');
             $table->tinyInteger('is_manufacture');
             $table->dateTime('created_at');	
             $table->dateTime('updated_at');

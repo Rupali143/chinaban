@@ -44,21 +44,22 @@
       errorPlacement: function (error, element) {
         error.addClass('invalid-feedback');
         element.closest('.form-group').append(error);
+        error.fadeOut(4000);
       },
+
       highlight: function (element, errorClass, validClass) {
         $(element).addClass('is-invalid');
       },
       unhighlight: function (element, errorClass, validClass) {
         $(element).removeClass('is-invalid');
         // $(element).css('border-color', '#2b88e8');
-      }
-
+      },
     })
 
-    $("#saveBtn").on("click", function(){
-      if($("#categoryForm").valid()){
-        $("#modal_category").modal("show");
-      } else {}
-      return false;
-    });
+    // $("#saveBtn").on("click", function(){
+    //   if($("#categoryForm").valid()){
+    //     $("#modal_category").modal("show");
+    //   } else {}
+    //   return false;
+    // });
   })

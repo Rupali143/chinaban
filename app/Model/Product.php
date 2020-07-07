@@ -30,4 +30,9 @@ class Product extends Model
     {
         return $this->belongsTo('App\Model\Category');
     }
+
+    //user_product have many products.fetched products.
+    public function userproduct(){
+        return $this->hasMany(UserProduct::class);
+    }
 }

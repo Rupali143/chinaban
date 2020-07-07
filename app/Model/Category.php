@@ -37,4 +37,8 @@ class Category extends Model
 	    return $this->belongsTo(Self::class,'parent_category');
 	}
 
+    //user_product have many categories.fetched categories.
+    public function userproduct() {
+        return $this->hasMany(UserProduct::class);
+    }
 }

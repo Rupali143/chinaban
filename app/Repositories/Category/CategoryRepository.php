@@ -37,9 +37,13 @@ class CategoryRepository implements CategoryInterface{
 	*/
 
 	public function all(){
-		return $category = Category::with('parent','child','image')
-							// ->where('parent_category', '!=', null)
-		->get();
+		$category = Category::with('parent','child','image')
+							// ->where('parent_category', '=', 0)
+							->get();
+		$parent = Category::with('parent','child')
+							->where('parent_category', '=', 0)
+							->get();
+		return $category;					
 	}
 
 	/**
@@ -50,7 +54,7 @@ class CategoryRepository implements CategoryInterface{
     * @return $category
 	*/
 	public function save($data){ 
-		if(!($data->category_id)){ //dd($data->all());
+		if(!($data->category_id)){
 			$result = $this->validateCategory($data);
 
 			if ($image = $data->file('image')) {
@@ -72,7 +76,7 @@ class CategoryRepository implements CategoryInterface{
 				'imageable_id' => $lastId]);
 			return $category;
 		}
-		else{ //dd("else");
+		else{ 
 			$oldImageName = $data->storage_image;
 			$image = $data->file('image');
 

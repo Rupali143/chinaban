@@ -194,6 +194,7 @@ return [
         @Author Rupali<rupali.satpute@neosofttech.com>
         */
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
 
     ],
 

@@ -14,7 +14,7 @@
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
-        <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
+        <img class="direct-chat-img" src="{{ asset('dist/img/user1-128x128.jpg')}}" alt="message user image">
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" id="logout">
           <ul class="navbar-nav ml-auto">

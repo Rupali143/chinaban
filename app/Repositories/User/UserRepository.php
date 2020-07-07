@@ -340,13 +340,13 @@ class UserRepository implements UserInterface{
             ]);
 		}else
         {
-			
-			$user = User::create(['mobile_number'=>$data->mobile_number,'name'=>$data->name,'dob'=>$data->dob,'is_manufacture'=>$data->is_manufacture]);			
-			
+			//data Save to users Table
+			$user = User::create(['mobile_number'=>$data->mobile_number,'name'=>$data->name,'dob'=>$data->dob,'is_manufacture'=>$data->is_manufacture]);	
+			//data Save to know_about_product Table		
 			$storeKnowAboutProduct = KnowAboutProduct::create(
 				['en_name' => $data->know_about_product]);
 			
-			// $storeProduct = new UserProduct;
+			//data Save to products & user_product Table		
 			$userProductSave = $data->get('domain_category');
 
 			foreach ($userProductSave as $value) { 
@@ -355,25 +355,39 @@ class UserRepository implements UserInterface{
 			 		 'category_id' => $value['category'],
 			 		 'product_detail' => $value['product_details']
 			 		]);
+
+			 	$storeUserProduct = UserProduct::create([
+			 		'category_id' => $value['category'],
+			 		'user_id' => $user->id,
+			 		'product_id'=> $storeProduct->id,
+			 		'is_import' => $value['is_imported']
+			 		]);
 			}
-			
+
 
 			if($user)
             {
 				return response()->json([
 					'code' => "200",
-					// 'is_expired'=>false,
 					'message' => "Registartion done successfully",
 					'data'    => $user
 				]);
             }else{
 				return response()->json([
 					'code' => "412",
-					// 'is_expired'=>false,
 					'message' => "Registartion not done successfully",
 					'data'    => []
 				]);
             }           
 		}		 	
+	}
+
+
+	public function all(){
+		return $users = User::all();
+	}
+
+	public function findUser($id){
+		return $users = User::find($id);
 	}
 }

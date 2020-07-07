@@ -28,6 +28,22 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('user.index') }}" class="nav-link">
+              <i class="nav-icon far fa-image"></i>
+              <p>
+                Manage Users
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('search.index') }}" class="nav-link">
+              <i class="nav-icon far fa-image"></i>
+              <p>
+                Search Manufacturer
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

@@ -66,6 +66,31 @@ Route::get('/edit/{id}','CategoryController@edit');
 
 Route::post('/destroy/{id}','CategoryController@destroy')->name('category.destroy');
 });
+
+
+/**
+* Route for Manage Users
+*@Author Rupali <rupali.satpute@neosofttech.com>
+*/
+Route::group(['middleware' => ['check-login-admin'], 'prefix' => 'user'], function(){
+
+Route::get('/', 'UserController@index')->name('user.index');
+
+Route::get('/Listing', 'UserController@userListing')->name('user.listing');
+
+Route::get('/View/{id}', 'UserController@userView')->name('user.view');
+
+Route::get('/IsImport', 'UserController@userIsImport')->name('user.isImport');
+
+Route::post('/subcat', 'UserController@subcat')->name('subcat');
+});
+
+Route::get('/search','SearchController@index')->name('search.index');
+
+Route::post('/searchManufacturer','SearchController@manufacturer')->name('search.manufacturer');
+
+
+
 /**
 * Routes for product.
 * @author Bharti<bharati.tadvi@neosofttech.com>
@@ -86,7 +111,3 @@ Route::group(['middleware' => ['check-login-admin'], 'prefix' => 'product'], fun
 
 Route::post('/checkCategory','CategoryController@checkCategoryExist');
 
-Route::get('/test',function(){
-
-    return view('test');
-});

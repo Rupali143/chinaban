@@ -44,7 +44,7 @@
                   <select class="form-control select2bs4" style="width: 100%;" name="parent_category" id="parent_category">
                     <option value="0">Parent</option>
                     @foreach($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->en_name }}</option>
+                     <option value="{{ $category->id }}">{{ $category->en_name }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -55,7 +55,7 @@
                @enderror
                <div class="form-group">
                 <label>Category</label>
-                <input type="text" class="form-control" placeholder="Enter Category" id="category" name="category">
+                <input type="text" class="form-control" placeholder="Enter Category" id="category" name="category" value="{{ old('category') }}">
               </div>
               @error('category')
               <span class="text-danger errormsg" role="alert">
@@ -185,7 +185,7 @@
     $('body').on('click', '.editCategory', function () {
       var category_id = $(this).data('id');
       $.get("{{ url('category/edit') }}" +'/' + category_id, function (data) {
-        // alert(data.parent);
+        console.log(data.parent);
         var imagePath = data.get_image.image_location;
         var configPath = "{{asset(config('app.file_path'))}}";
         $('#modelHeading').html("Edit Category");
@@ -195,8 +195,12 @@
         $('#category').val(data.en_name);
         $('#storage_image').attr('src', configPath +'/'+ imagePath);
         $('#storage_image').append("<input type='hidden' name='hidden_image' id='hidden_image' value='"+ imagePath+"''>");
-        $('#parent_category').val(data.parent.id).trigger('change');
-        $('#parent_category').append('<option value="' + data.parent.id + '">' + data.parent.en_name + '</option>').attr("selected", "selected");
+        if(data.parent == null){
+          $('#parent_category').val('0').trigger('change');
+        }else{
+          $('#parent_category').val(data.parent.id).trigger('change');
+        }
+        // $('#parent_category').append('<option value="' + data.parent.id + '">' + data.parent.en_name + '</option>').attr("selected", "selected");
 
       })
     });

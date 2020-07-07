@@ -33,11 +33,7 @@ Route::group(['prefix' => 'v1','namespace' => 'Api\v1'], function () {
 */
     Route::get('/fetch-category','ApiCategoryController@fetchCategory')->name('fetch.category');
     Route::POST('/fetch-subcategory','ApiCategoryController@fetchSubcategory')->name('fetch.subcategory');
-
-
 });
-
-
 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

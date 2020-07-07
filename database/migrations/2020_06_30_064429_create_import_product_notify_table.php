@@ -17,7 +17,7 @@ class CreateImportProductNotifyTable extends Migration
             $table->Increments('id');
             $table->bigInteger('product_id')->unsigned();
             $table->foreign('product_id')->references('id')->on('products');
-            // $table->json('notify_user_id')->unsigned();
+            $table->json('notify_user_id');
             // $table->foreign('notify_user_id')->references('id')->on('users');
             $table->dateTime('created_at'); 
             $table->dateTime('updated_at');
