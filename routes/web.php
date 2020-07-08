@@ -85,14 +85,17 @@ Route::get('/IsImport', 'UserController@userIsImport')->name('user.isImport');
 Route::post('/subcat', 'UserController@subcat')->name('subcat');
 });
 
-Route::get('/search','SearchController@index')->name('search.index');
+/**
+* Route for Search manufacturer
+*@Author Rupali <rupali.satpute@neosofttech.com>
+*/
+Route::group(['middleware' =>['check-login-admin'], 'prefix' => 'search'], function(){
+Route::get('/','SearchController@index')->name('search.index');
 
-Route::get('/searchManufacturer','SearchController@manufacturer')->name('search.manufacturer');
+Route::get('/Manufacturer','SearchController@manufacturer')->name('search.manufacturer');
+});
 
-// Route::get('/searchMan','SearchController@searchManufacturer')->name('search.searchManufacturer');
-
-
-
+Route::post('/checkCategory','CategoryController@checkCategoryExist');
 
 /**
 * Routes for product.
@@ -112,5 +115,5 @@ Route::group(['middleware' => ['check-login-admin'], 'prefix' => 'product'], fun
 
 
 
-Route::post('/checkCategory','CategoryController@checkCategoryExist');
+
 

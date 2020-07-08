@@ -10,10 +10,6 @@ class UserProduct extends Model
 
     protected $fillable = ['id','user_id','category_id','product_id','is_import'];
 
-    // public function category(){
-    // 	return $this->belogsToMany(Category::class);
-    // }
-
     public function category() {   
     	return $this->belongsTo(Category::class,'category_id');
     }

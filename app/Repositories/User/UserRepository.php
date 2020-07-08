@@ -286,7 +286,13 @@ class UserRepository implements UserInterface{
 
 
 
-	//Chanages rupali
+	/**
+	* Register user Changes
+	*@Author Rupali <rupali.satpute@neosofttech.com>
+	*
+    * @param  $data
+    * @return jsonData
+	*/
 
 	public function registerUser($data){ 
 		$arr['error'] = array();
@@ -324,7 +330,14 @@ class UserRepository implements UserInterface{
         }		 	
 	}
 
-	public function saveUser($data){ //dd($data->all());
+	/**
+	* Save user Changes
+	*@Author Rupali <rupali.satpute@neosofttech.com>
+	*
+    * @param  $data
+    * @return jsonData
+	*/
+	public function saveUser($data){ 
 		$arr['error'] = array();
 		$validationRules = $this->validateUser($data);
         $validator = Validator::make($data->all(), $validationRules);
@@ -362,7 +375,6 @@ class UserRepository implements UserInterface{
 			 		]);
 			}
 
-
 			if($user)
             {
 				return response()->json([
@@ -381,11 +393,24 @@ class UserRepository implements UserInterface{
 	}
 
 
+	/**
+	* Select all users
+	*@Author Rupali <rupali.satpute@neosofttech.com>
+	*
+    * @param 
+    * @return users Data
+	*/
 	public function all(){
 		return $users = User::all();
 	}
 
-	//find user for manage users
+	/**
+	* Find user for manage users
+	*@Author Rupali <rupali.satpute@neosofttech.com>
+	*
+    * @param  $id
+    * @return users Data
+	*/
 	public function findUser($id){
 		return $users = User::find($id);
 	}
