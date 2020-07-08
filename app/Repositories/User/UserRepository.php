@@ -297,7 +297,6 @@ class UserRepository implements UserInterface{
         {   
             return response()->json([
 				'code' => "412",
-				// 'is_expired'=>false,
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
             ]);
@@ -334,7 +333,6 @@ class UserRepository implements UserInterface{
         {   
             return response()->json([
 				'code' => "412",
-				// 'is_expired'=>false,
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
             ]);
@@ -387,7 +385,10 @@ class UserRepository implements UserInterface{
 		return $users = User::all();
 	}
 
+	//find user for manage users
 	public function findUser($id){
 		return $users = User::find($id);
 	}
+
+	
 }

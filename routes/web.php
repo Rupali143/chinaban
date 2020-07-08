@@ -87,7 +87,10 @@ Route::post('/subcat', 'UserController@subcat')->name('subcat');
 
 Route::get('/search','SearchController@index')->name('search.index');
 
-Route::post('/searchManufacturer','SearchController@manufacturer')->name('search.manufacturer');
+Route::get('/searchManufacturer','SearchController@manufacturer')->name('search.manufacturer');
+
+// Route::get('/searchMan','SearchController@searchManufacturer')->name('search.searchManufacturer');
+
 
 
 
