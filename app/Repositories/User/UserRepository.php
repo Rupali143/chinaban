@@ -127,17 +127,18 @@ class UserRepository implements UserInterface{
         {   
             return response()->json([
 				'code' => "404",
-				// 'is_expired'=>false,
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
             ]);
 		}else
         {
 			if($data->otp == "1234"){
+				$user = User::create(['mobile_number'=> $data->mobile_number]);
+				$access_token =  $user->createToken('MyApp')->accessToken;
 				return response()->json([
 					'code' => 200,
-					'message' => "OTP verified Successfully!!",
-					'data'    => []
+					'message' => "OTP match successfully!!",
+					'access_token' => $access_token 
 				]);
 			}else{
 				$arrError['error'] = ['OTP does not match.'];
@@ -180,14 +181,12 @@ class UserRepository implements UserInterface{
             {
 				return response()->json([
 					'success' => true,
-					'is_expired'=>false,
 					'message' => "Registartion done successfully",
 					'data'    => $user
 				]);
             }else{
 				return response()->json([
 					'success' => false,
-					'is_expired'=>false,
 					'message' => "Registartion not done successfully",
 					'data'    => []
 				]);
@@ -211,7 +210,6 @@ class UserRepository implements UserInterface{
         {   
             return response()->json([
 				'success' => false,
-				'is_expired'=>false,
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
             ]);
@@ -257,7 +255,6 @@ class UserRepository implements UserInterface{
         {   
             return response()->json([
             'success' => false,
-            'is_expired'=>false,
             'message' => 'validation failed',
             'data'    => $validator->errors(),
             ]);
@@ -269,14 +266,14 @@ class UserRepository implements UserInterface{
 
 			if($requestData->otp == "1234"){
 				return response()->json([
-					'success' => true,
+					'code' => true,
 					'message' => "Login successfully",
 					'data'    => $data
 				]);
 			}else{
 				$arrError['error'] = ['OTP does not match.'];
 				return response()->json([
-					'success' => false,
+					'code' => false,
 					'message' => "Otp does not match",
 					'data'    => $arrError
 				]);
@@ -352,7 +349,15 @@ class UserRepository implements UserInterface{
 		}else
         {
 			//data Save to users Table
-			$user = User::create(['mobile_number'=>$data->mobile_number,'name'=>$data->name,'dob'=>$data->dob,'is_manufacture'=>$data->is_manufacture]);	
+			// $UpdateDetails = User::where('email', $userEmail)->firstOrFail();
+			$user = User::where('mobile_number', $data->mobile_number)->update(['name'=>$data->name,'dob'=>$data->dob,'is_manufacture'=>$data->is_manufacture,'is_profile_complete'=> 1]);
+			
+
+			$userId = User::all()->last();
+			// dd($userId->id);
+			// $access_token =  $user->createToken('MyApp')->accessToken;
+			// dd($access_token);
+
 			//data Save to know_about_product Table		
 			$storeKnowAboutProduct = KnowAboutProduct::create(
 				['en_name' => $data->know_about_product]);
@@ -369,7 +374,7 @@ class UserRepository implements UserInterface{
 
 			 	$storeUserProduct = UserProduct::create([
 			 		'category_id' => $value['category'],
-			 		'user_id' => $user->id,
+			 		'user_id' => $userId->id,
 			 		'product_id'=> $storeProduct->id,
 			 		'is_import' => $value['is_imported']
 			 		]);
@@ -380,7 +385,7 @@ class UserRepository implements UserInterface{
 				return response()->json([
 					'code' => "200",
 					'message' => "Registartion done successfully",
-					'data'    => $user
+					'data'    => $user,
 				]);
             }else{
 				return response()->json([

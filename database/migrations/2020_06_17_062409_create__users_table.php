@@ -19,6 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('name')->length('100');
             $table->date('dob');
             $table->tinyInteger('is_manufacture');
+            $table->rememberToken();
+            $table->tinyInteger('is_profile_complete')->default('0');
             $table->dateTime('created_at');	
             $table->dateTime('updated_at');
             $table->softDeletes();	
