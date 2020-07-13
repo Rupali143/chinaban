@@ -184,6 +184,7 @@
 
       $('body').on('click', '.editProduct', function () {
           var product_id = $(this).data('id');
+          // alert(product_id);
           $('.error-category').empty();
           $('.error-product').empty();
           $('.error-product-detail').empty();
@@ -192,7 +193,7 @@
           $('#product-error').empty();
           $('#subCategory-error').empty();
           $('#category_id-error').empty();
-          $.get("{{ url('product/edit') }}" +'/' + product_id, function (data) {
+          $.get("{{ url('admin/product/edit') }}" +'/' + product_id, function (data) {
             $('#modelHeading').html("Edit Product");
             $('#saveBtn').val("edit-user");
             $('#modal_product').modal('show');
@@ -219,7 +220,7 @@
             if(e.value === true){
             $.ajax({
               type: "GET",
-              url: "{{ url('product/destroy') }}"+'/'+product_id,
+              url: "{{ url('admin/product/destroy') }}"+'/'+product_id,
               success: function (data) {
               // table.draw();
               if(data){

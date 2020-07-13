@@ -44,7 +44,7 @@
                   <select class="form-control select2bs4" style="width: 100%;" name="parent_category" id="parent_category">
                     <option value="0">Parent</option>
                     @foreach($categories as $category)
-                     <option value="{{ $category->id }}">{{ $category->en_name }}</option>
+                    <option value="{{ $category->id }}">{{ $category->en_name }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -96,6 +96,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -125,13 +126,14 @@
       $('#categoryForm').trigger("reset");
       $('#modelHeading').html("Create New Category");
       $('#modal_category').modal('show');
+
+    validate();
+    $('#parent_category, #category, #image').change(validate);
     });
 
     $('#saveBtn').click(function (e) {
       e.preventDefault();
 
-      $("#saveBtn").attr("disabled", true);
-      
       var category = $('#category');
       var parent_category = $('#parent_category');
       var image = $('#image');
@@ -155,7 +157,7 @@
         success: function (data) {
           $('#categoryForm').trigger("reset");
           $('#modal_category').modal('hide');
-          // alert(category_id);
+          // alert(data);
           if(!category_id){
             Swal.fire(
               'Created!',
@@ -182,69 +184,81 @@
           });
     });
 
-    $('body').on('click', '.editCategory', function () {
-      var category_id = $(this).data('id');
-      $.get("{{ url('category/edit') }}" +'/' + category_id, function (data) {
-        console.log(data.parent);
-        var imagePath = data.get_image.image_location;
-        var configPath = "{{asset(config('app.file_path'))}}";
-        $('#modelHeading').html("Edit Category");
-        $('#saveBtn').val("edit-user");
-        $('#modal_category').modal('show');
-        $('#category_id').val(data.id);
-        $('#category').val(data.en_name);
-        $('#storage_image').attr('src', configPath +'/'+ imagePath);
-        $('#storage_image').append("<input type='hidden' name='hidden_image' id='hidden_image' value='"+ imagePath+"''>");
-        if(data.parent == null){
-          $('#parent_category').val('0').trigger('change');
-        }else{
-          $('#parent_category').val(data.parent.id).trigger('change');
-        }
+    function validate(){
+      if ($('#parent_category').val().length > 0 &&
+        $('#category').val().length > 0 &&
+        $('#image').val().length > 0) {
+        $("#saveBtn").attr("disabled", false);
+    }
+    else {
+      $("#saveBtn").attr("disabled", true);
+    }
+  }
+
+
+$('body').on('click', '.editCategory', function () {
+  var category_id = $(this).data('id');
+  $.get("{{ url('admin/category/edit') }}" +'/' + category_id, function (data) {
+    console.log(data.parent);
+    var imagePath = data.get_image.image_location;
+    var configPath = "{{asset(config('app.file_path'))}}";
+    $('#modelHeading').html("Edit Category");
+    $('#saveBtn').val("edit-user");
+    $('#modal_category').modal('show');
+    $('#category_id').val(data.id);
+    $('#category').val(data.en_name);
+    $('#storage_image').attr('src', configPath +'/'+ imagePath);
+    $('#storage_image').append("<input type='hidden' name='hidden_image' id='hidden_image' value='"+ imagePath+"''>");
+    if(data.parent == null){
+      $('#parent_category').val('0').trigger('change');
+    }else{
+      $('#parent_category').val(data.parent.id).trigger('change');
+    }
         // $('#parent_category').append('<option value="' + data.parent.id + '">' + data.parent.en_name + '</option>').attr("selected", "selected");
 
       })
-    });
+});
 
-    $('body').on('click', '.deleteCategory', function () {
-      var category_id = $(this).data("id");
-      Swal.fire({
-        title: 'Are you sure?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((e) => {
-        if (e.value === true) {
-          $.ajax({
-            url: "{{ url('category/destroy') }}"+'/'+category_id,
-            type: "POST",
-            success: function (data) {
-              if(data){
-                Swal.fire(
-                  'Deleted!',
-                  'Your Category has been deleted.',
-                  'success'
-                  ).then(function() {
-                    $("#categoryTable").DataTable().ajax.reload();
+$('body').on('click', '.deleteCategory', function () {
+  var category_id = $(this).data("id");
+  Swal.fire({
+    title: 'Are you sure?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((e) => {
+    if (e.value === true) {
+      $.ajax({
+        url: "{{ url('admin/category/destroy') }}"+'/'+category_id,
+        type: "POST",
+        success: function (data) {
+          if(data){
+            Swal.fire(
+              'Deleted!',
+              'Your Category has been deleted.',
+              'success'
+              ).then(function() {
+                $("#categoryTable").DataTable().ajax.reload();
                     // window.location.reload();
                   });
-                }else{
-                  Swal.fire({
-                    title : 'Opps...',
-                    text : 'Something wrong!',
-                    icon : 'error',
-                    timer : '1500'
-                  });
-                }              
-              },
-            });
-        }else{
-          Swal.fire("Your file is safe!");
-        }
-      });
-
-    });
+            }else{
+              Swal.fire({
+                title : 'Opps...',
+                text : 'Something wrong!',
+                icon : 'error',
+                timer : '1500'
+              });
+            }              
+          },
+        });
+    }else{
+      Swal.fire("Your file is safe!");
+    }
   });
+
+});
+});
 </script>
 @endsection

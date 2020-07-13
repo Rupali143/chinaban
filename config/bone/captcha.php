@@ -108,7 +108,7 @@ return [
     | Enter the different characters.
     |
     */
-    'chars' => 'QSFHTRPAJKLMZXCVBNabdefhxktyzj23456789',
+    'chars' => '1234567890',
 
     /*
     |--------------------------------------------------------------------------

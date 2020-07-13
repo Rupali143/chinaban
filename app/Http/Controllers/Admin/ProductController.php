@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use DataTables;
@@ -8,7 +8,7 @@ use App\Model\Product;
 use App\Model\Category;
 use Response;
 use App\Repositories\Product\ProductInterface as ProductInterface;
-
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
@@ -50,7 +50,6 @@ class ProductController extends Controller
 
     public function productListing(){
         $products = $this->productRepository->all();
-        // dd($products);
         return Datatables::of($products)
         ->addIndexColumn()
         ->addColumn('category_name', function($products){
@@ -92,7 +91,6 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::with('category')->find($id);
-        // dd($product->toArray());
         return response()->json($product);
     }
 

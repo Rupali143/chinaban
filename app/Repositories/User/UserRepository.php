@@ -82,7 +82,6 @@ class UserRepository implements UserInterface{
         {   
             return response()->json([
 				'success' => false,
-				'is_expired'=>false,
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
             ]);

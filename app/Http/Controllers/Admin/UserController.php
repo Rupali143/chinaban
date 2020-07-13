@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Repositories\User\UserInterface as UserInterface;
 use DataTables;
 use App\Model\UserProduct;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {

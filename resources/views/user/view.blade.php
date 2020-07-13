@@ -41,11 +41,6 @@
   		<div class="form-group row">
   			<label for="Category" class="col-sm-4 col-form-label">Category</label>
   			<div class="col-sm-8">
-  				<!-- <select class="form-control" style="width: 100%;" name="category" id="category">
-  					@foreach($categories as $category)
-  					<option value="{{ $category->category->parent['id'] }}">{{ $category->category->parent['en_name'] }}</option>
-  					@endforeach
-  				</select> -->
   				<select class="browser-default custom-select" name="subcategory" id="subcategory">
           </select>
         </div>

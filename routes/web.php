@@ -2,18 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('dashboard','LoginController@dashboard')->name('admin.dashboard.index');
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -49,68 +37,39 @@ Route::middleware('check-login-admin')->group(function () {
 });
 
 
-/**
-* Route for Category
-*@Author Rupali <rupali.satpute@neosofttech.com>
+/*@Author Rupali <rupali.satpute@neosofttech.com> Admin Panel[category,user,search]
 */
-
-Route::group(['middleware' => ['check-login-admin'], 'prefix' => 'category'], function(){
-Route::get('/','CategoryController@index')->name('category');
-
-Route::get('/listing','CategoryController@categoryListing')->name('category.listing');
-
-Route::post('/store','CategoryController@store')->name('categoryStore')
-->middleware('xss');
-
-Route::get('/edit/{id}','CategoryController@edit');
-
-Route::post('/destroy/{id}','CategoryController@destroy')->name('category.destroy');
+Route::group(array('prefix' => 'admin','namespace' =>'Admin','middleware' => ['check-login-admin']), function(){
+    Route::prefix('category')->group(function(){
+        Route::get('/','CategoryController@index')->name('admin.category');
+        Route::get('/listing','CategoryController@categoryListing')->name('category.listing');
+        Route::post('/store','CategoryController@store')->name('categoryStore')
+               ->middleware('xss');
+        Route::get('/edit/{id}','CategoryController@edit');
+        Route::post('/destroy/{id}','CategoryController@destroy')->name('category.destroy');
+    });
+    Route::prefix('user')->group(function(){
+        Route::get('/', 'UserController@index')->name('admin.user');
+        Route::get('/listing', 'UserController@userListing')->name('user.listing');
+        Route::get('/view/{id}','UserController@userView')->name('user.view');
+        Route::get('/isImport','UserController@userIsImport')->name('user.isImport');
+        Route::post('/subcat', 'UserController@subcat')->name('subcat');
+    });
+    Route::prefix('search')->group(function(){
+        Route::get('/','SearchController@index')->name('search.index');
+        Route::get('/Manufacturer','SearchController@manufacturer')->name('search.manufacturer');
+    });
+    Route::prefix('product')->group(function(){
+        Route::get('/','ProductController@index')->name('product.index');
+        Route::get('/index','ProductController@productListing')->name('product.listing');
+        Route::post('/store','ProductController@store')->name('product.store');
+        Route::get('/edit/{id}','ProductController@edit');
+        Route::get('/destroy/{id}','ProductController@destroy')->name('product.destroy');
+        Route::get('/get/subcategories','ProductController@getSubCategory')->name('getSubCategory');
+    });
 });
 
-
-/**
-* Route for Manage Users
-*@Author Rupali <rupali.satpute@neosofttech.com>
-*/
-Route::group(['middleware' => ['check-login-admin'], 'prefix' => 'user'], function(){
-
-Route::get('/', 'UserController@index')->name('user.index');
-
-Route::get('/Listing', 'UserController@userListing')->name('user.listing');
-
-Route::get('/View/{id}', 'UserController@userView')->name('user.view');
-
-Route::get('/IsImport', 'UserController@userIsImport')->name('user.isImport');
-
-Route::post('/subcat', 'UserController@subcat')->name('subcat');
-});
-
-/**
-* Route for Search manufacturer
-*@Author Rupali <rupali.satpute@neosofttech.com>
-*/
-Route::group(['middleware' =>['check-login-admin'], 'prefix' => 'search'], function(){
-Route::get('/','SearchController@index')->name('search.index');
-
-Route::get('/Manufacturer','SearchController@manufacturer')->name('search.manufacturer');
-});
-
-Route::post('/checkCategory','CategoryController@checkCategoryExist');
-
-/**
-* Routes for product.
-* @author Bharti<bharati.tadvi@neosofttech.com>
-* 
-* @return void
-*/
-Route::group(['middleware' => ['check-login-admin'], 'prefix' => 'product'], function() {
-    Route::get('/','ProductController@index')->name('product.index');
-    Route::get('/index','ProductController@productListing')->name('product.listing');
-    Route::post('/store','ProductController@store')->name('product.store');
-    Route::get('/edit/{id}','ProductController@edit')->name('product.edit');
-    Route::get('/destroy/{id}','ProductController@destroy')->name('product.destroy');
-    Route::get('/get/subcategories','ProductController@getSubCategory')->name('getSubCategory');
-});
+Route::post('/checkCategory','Admin\CategoryController@checkCategoryExist');
 
 
 

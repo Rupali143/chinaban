@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Model\Category;
 use Illuminate\Http\Request;
 use App\Repositories\Category\CategoryInterface as CategoryInterface;
 use DataTables;
+use App\Http\Controllers\Controller;
 
 
 class CategoryController extends Controller
@@ -47,8 +48,9 @@ class CategoryController extends Controller
 
     public function categoryListing(){
         $categories = $this->categoryRepository->all();
-        // dd($categories->toArray());
-        $configPath = config('app.file_path');
+        // dd($categories);
+        // $configPath = config('app.file_path');
+
         return Datatables::of($categories)
         ->addIndexColumn()
         ->addColumn('action', function($categories){
@@ -57,7 +59,8 @@ class CategoryController extends Controller
            return $btn;
        })
         ->addColumn('image', function($categories){
-           $image = '<img src="storage/images/'.$categories->image->image_location.'" style="height:50px;width:50px;">';
+           $url = asset(config('app.file_path'));
+           $image = '<img src="'.$url.'/'.$categories->image->image_location.'" style="height:50px;width:50px;">';
            return $image;
        })
         ->editColumn('parent_category', function($categories) {
@@ -83,8 +86,6 @@ class CategoryController extends Controller
     */
     public function store(Request $request)
     {
-        // dd($request->all());
-
         try {
             $categories = $this->categoryRepository->save($request);
             return response()->json(['success'=>'Category saved successfully.']);
@@ -103,7 +104,6 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::with('getImage','parent')->find($id);
-        // dd($category->parent->toArray());
         return response()->json($category);
     }
 
@@ -127,13 +127,22 @@ class CategoryController extends Controller
 
     public function checkCategoryExist(Request $request){
         $category = Category::all()->where('en_name',$request->category)
-                                   // ->where('deleted_at','=',NULL)
                                    ->first();
-                                   // dd($request);
+
+        $data['status'] = true;
+        $data['message'] = "Found";
         if ($category) {
-           return response()->json($request->category.' is already taken');
+           return response()->json([
+                    'code' => 404,
+                    'message' => "Not available",
+                    'data'    => $data
+                ]);
        } else {
-           return response()->json($request->category.' is available');
+           return response()->json([
+                    'code' => 200,
+                    'message' => "available",
+                    'data'    => $data
+           ]);
        }
    }
 }

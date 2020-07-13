@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Model\Category;
@@ -8,6 +8,7 @@ use App\Model\UserProduct;
 use App\Model\User;
 use App\Repositories\Category\CategoryInterface as CategoryInterface;
 use DataTables;
+use App\Http\Controllers\Controller;
 
 class SearchController extends Controller
 {

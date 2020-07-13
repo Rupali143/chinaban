@@ -13,7 +13,7 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
-          <a href="{{ route('category') }}" class="nav-link">
+          <a href="{{ route('admin.category') }}" class="nav-link">
             <i class="nav-icon far fa-image"></i>
             <p>
              Manage Categories
@@ -29,7 +29,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('user.index') }}" class="nav-link">
+            <a href="{{ route('admin.user') }}" class="nav-link">
               <i class="nav-icon far fa-image"></i>
               <p>
                 Manage Users
