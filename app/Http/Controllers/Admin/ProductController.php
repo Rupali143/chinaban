@@ -35,9 +35,10 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->productRepository->all();
-        $categories = Category::where('parent_category',0)->get();
-        // $categories = Category::all();
-        return view('product.index',compact('products','categories'));
+        // $categories = Category::where('parent_category',0)->get();
+        $categories = Category::all();
+        // dd($products);
+        return view('admin.product.index',compact('products','categories'));
     }
 
     /**
@@ -53,7 +54,7 @@ class ProductController extends Controller
         return Datatables::of($products)
         ->addIndexColumn()
         ->addColumn('category_name', function($products){
-            return $products->category->en_name;
+            return $products->category['en_name'];
         })
         ->addColumn('action', function($products){
                 $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$products->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editProduct">Edit</a>';

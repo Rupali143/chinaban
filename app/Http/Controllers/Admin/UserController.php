@@ -32,7 +32,7 @@ class UserController extends Controller
     * @return view
     */
     public function index(){
-    	return view('user.index');
+    	return view('admin.user.index');
 
     }
 
@@ -74,7 +74,7 @@ class UserController extends Controller
     public function userView($id){
       $users = $this->userRepository->findUser($id);
       $categories = UserProduct::where('user_id',$id)->with('category')->get();
-      return view('user.view',compact('users','categories'));
+      return view('admin.user.view',compact('users','categories'));
   }
 
     /**
@@ -89,17 +89,17 @@ class UserController extends Controller
             $users = UserProduct::where('is_import',1)->with(['users','products','category']);
             return DataTables::eloquent($users)
             ->addColumn('category', function (UserProduct $category) {
-                return $category->category->en_name;
+                return $category->category['en_name'];
             })
             ->addColumn('products', function (UserProduct $products) {
-                return $products->products->en_name;
+                return $products->products['en_name'];
             })
             ->addColumn('users', function (UserProduct $users) {
                 return $users->users->name;
             })
             ->toJson();
         }
-        return view('user.isImport');
+        return view('admin.user.isImport');
     }
 
    /**

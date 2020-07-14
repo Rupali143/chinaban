@@ -33,7 +33,7 @@
   			<div class="col-sm-8">
   				<select class="form-control" style="width: 100%;" name="category" id="category">
   					@foreach($categories as $category)
-  					<option value="{{ $category->category->id }}">{{ $category->category->en_name }}</option>
+  					<option value="{{ $category->category['id'] }}">{{ $category->category['en_name'] }}</option>
   					@endforeach
   				</select>
   			</div>
@@ -61,26 +61,7 @@
 
 @section('scripts')
 <script type="text/javascript">
-  $.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  });
-  $(document).ready(function () {
-    $('#category').on('change',function(e) {
-      var cat_id = e.target.value;
-      $.ajax({
-       url:"{{ route('subcat') }}",
-       type:"POST",
-       data: { cat_id: cat_id },
-       success:function (data) {
-        $('#subcategory').empty();                     
-        $('#subcategory').append('<option value="'+
-         data.subcategories[0].category.parent.id +'">'+
-         data.subcategories[0].category.parent.en_name +'</option>');
-        }
-      })
-    });
-  });
+  var subcategory = "{{ route('subcat') }}";
 </script>
+<script type="text/javascript" src="{{ asset('js/admin/user.js')}}"></script>
 @endsection

@@ -23,23 +23,7 @@
 
 @section('scripts')
 <script type="text/javascript">
-	$(document).ready(function() {
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-		$('#isImportTable').DataTable({
-			processing: true,
-			serverSide: true,
-			ajax: "{{ route('user.isImport') }}",
-			columns: [
-			// {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-			{data: 'users', name: 'users.name'},
-			{data: 'category', name: 'category.en_name'},
-			{data: 'products', name: 'products.en_name'},
-			]
-		});
-	});
+	var isImport = "{{ route('user.isImport') }}";
 </script>
+<script type="text/javascript" src="{{ asset('js/admin/user.js')}}"></script>
 @endsection

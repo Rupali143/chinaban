@@ -34,7 +34,7 @@ class SearchController extends Controller
     */
 	public function index(){
 		$categories = $this->categoryRepository->all();
-		return view('search.manufacturer',compact('categories'));
+		return view('admin.search.manufacturer',compact('categories'));
 	}
 
 
