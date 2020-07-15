@@ -419,5 +419,56 @@ class UserRepository implements UserInterface{
 		return $users = User::find($id);
 	}
 
+	/**
+	* Find user product
+	*@Author Rupali <rupali.satpute@neosofttech.com>
+	*
+    * @param  $id
+    * @return product
+	*/
+	public function getUserProduct($id){
+		$product = UserProduct::where('user_id','=',$id)->get();
+		if(count($product) > 0){
+			return response()->json([
+			'code' => '200',
+			'message' => 'User product fetched Successfully!!',
+			'data'    => $product
+			]);
+		}else{
+			return response()->json([
+			'code' => '404',
+			'message' => 'User product not fetched!!',
+			'data'    => $product
+			]);
+		}
+	}
+
+
+	
+	/**
+	* Find user category
+	*@Author Rupali <rupali.satpute@neosofttech.com>
+	*
+    * @param  $id
+    * @return category
+	*/
+	public function getUserCategory($id){
+		$category = UserProduct::with('category')->where('user_id',$id)->get();
+		if(count($category) > 0){
+			return response()->json([
+			'code' => '200',
+			'message' => 'User category fetched Successfully!!',
+			'data'    => $category
+			]);
+		}else{
+			return response()->json([
+			'code' => '404',
+			'message' => 'User category not fetched!!',
+			'data'    => $category
+			]);
+		}
+		
+	}
+
 	
 }

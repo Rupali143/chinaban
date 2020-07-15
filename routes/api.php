@@ -3,17 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 /**
 * Routes for API.
 * @author Bharti<bharati.tadvi@neosofttech.com>
@@ -31,23 +20,19 @@ Route::get('/fetch-category','ApiCategoryController@fetchCategory')->name('fetch
 Route::POST('/fetch-subcategory','ApiCategoryController@fetchSubcategory')->name('fetch.subcategory');
 });
 
-
-
 /**
-* Authenticated Routes API.
+* Authenticated Routes API & Search manufacturing API.
 * @author Rupali<rupali.satpute@neosofttech.com>
 */
 Route::group(['middleware' => 'auth:api','prefix' => 'v1','namespace' => 'Api\v1'], function () {
 	Route::POST('/sign-in','LoginController@signIn')->name('user.signin');
 	Route::POST('/verify-otp','LoginController@verifyUserOtp')->name('verify.otp');
-
-
-/**
-* Routes for search Search manufacturing API.
-* @author Rupali<rupali.satpute@neosofttech.com>
-*/
-Route::post('/search-manufacturer','ApiSearchController@search')
-->name('search.manufacturer');
+	Route::post('/search-manufacturer','ApiSearchController@search')
+	->name('search.manufacturer');
+	Route::post('/user-category','UserController@getUserCategory')
+	->name('user.category');
+	Route::post('/user-product','UserController@getUserProduct')
+	->name('user.product');
 });
 
 
