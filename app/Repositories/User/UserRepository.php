@@ -5,6 +5,7 @@ use App\Model\User;
 use App\Model\UserProduct;
 use App\Model\Product;
 use App\Model\KnowAboutProduct;
+use App\Model\ImportProductNotify;
 use App\Repositories\User\UserInterface as UserInterface;
 use Illuminate\Support\Facades\Validator;
 
@@ -137,7 +138,7 @@ class UserRepository implements UserInterface{
 				return response()->json([
 					'code' => 200,
 					'message' => "OTP match successfully!!",
-					'access_token' => $access_token 
+					'data' => $access_token 
 				]);
 			}else{
 				$arrError['error'] = ['OTP does not match.'];
@@ -352,19 +353,31 @@ class UserRepository implements UserInterface{
 			$user = User::where('mobile_number', $data->mobile_number)->update(['name'=>$data->name,'dob'=>$data->dob,'is_manufacture'=>$data->is_manufacture,'is_profile_complete'=> 1]);
 			
 
-			$userId = User::all()->last();
-			// dd($userId->id);
-			// $access_token =  $user->createToken('MyApp')->accessToken;
-			// dd($access_token);
-
+			$lastUserId = User::all()->last();
+			// dd($lastUserId);
 			//data Save to know_about_product Table		
 			$storeKnowAboutProduct = KnowAboutProduct::create(
 				['en_name' => $data->know_about_product]);
 			
-			//data Save to products & user_product Table		
+			//import_product_notify
+			
+
+			//data Save to products & user_product Table	// where('is_manufacture',1)->	
 			$userProductSave = $data->get('domain_category');
 
 			foreach ($userProductSave as $value) { 
+				$fetchCategoryId = UserProduct::where('category_id',$value['category'])->pluck('user_id');
+				// $userData = User::whereIn('id',$fetchCategoryId)->get();
+				$userId = User::whereIn('id',$fetchCategoryId)->pluck('id');
+			 	$userIdJson = json_encode($userId);
+			 	// dd($userIdJson);
+			 	$message = "Successfully Imported";
+			 	$importData = ImportProductNotify::create(
+			 		['category_id' => $value['category'],
+			 		 'message' =>  $message,
+			 		 'notify_user_id' => $userIdJson,
+			 		]);
+
 			 	$storeProduct = Product::create(
 			 		['en_name' => $value['product_name'],
 			 		 'category_id' => $value['category'],
@@ -373,12 +386,13 @@ class UserRepository implements UserInterface{
 
 			 	$storeUserProduct = UserProduct::create([
 			 		'category_id' => $value['category'],
-			 		'user_id' => $userId->id,
+			 		'user_id' => $lastUserId->id,
 			 		'product_id'=> $storeProduct->id,
 			 		'is_import' => $value['is_imported']
 			 		]);
-			}
 
+			}
+			// dd($user);
 			if($user)
             {
 				return response()->json([

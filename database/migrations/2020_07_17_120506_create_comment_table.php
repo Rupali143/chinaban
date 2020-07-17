@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateImportProductNotifyTable extends Migration
+class CreateCommentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateImportProductNotifyTable extends Migration
      */
     public function up()
     {
-        Schema::create('import_product_notify', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->Increments('id');
-            $table->bigInteger('product_id')->unsigned();
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->json('notify_user_id');
-            // $table->foreign('notify_user_id')->references('id')->on('users');
+            $table->Integer('user_id');
+            $table->Integer('commented_user_id');
+            $table->Integer('product_id');
+            $table->text('comment');
             $table->dateTime('created_at'); 
             $table->dateTime('updated_at');
             $table->softDeletes()->nullable(1);
@@ -32,6 +32,6 @@ class CreateImportProductNotifyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('import_product_notifies');
+        Schema::dropIfExists('comments');
     }
 }
