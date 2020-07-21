@@ -8,6 +8,8 @@ use App\Model\KnowAboutProduct;
 use App\Model\ImportProductNotify;
 use App\Repositories\User\UserInterface as UserInterface;
 use Illuminate\Support\Facades\Validator;
+use App\Jobs\EmailNotificationSend;
+use Illuminate\Http\Request;
 
 class UserRepository implements UserInterface{
 
@@ -151,49 +153,6 @@ class UserRepository implements UserInterface{
         }		 	
 	}
 
-    /**
-	* Save user details
-	*@Author Bharti <bharati.tadvi@neosofttech.com>
-	*
-    * @param  $data
-    * @return \Illuminate\Http\Response
-	*/
-	public function saveUser1($data){
-		$arr['error'] = array();
-		$validationRules = $this->validateUser($data);
-		
-        $validator = Validator::make($data->all(), $validationRules);
-        /*Check for the validations*/
-        if ($validator->fails())
-        {   
-            return response()->json([
-				'success' => false,
-				'is_expired'=>false,
-				'message' => 'validation failed',
-				'data'    => $validator->errors(),
-            ]);
-		}else
-        {
-			
-			$user = User::create(['mobile_number'=>$data->mobile_number,'name'=>$data->name,'dob'=>$data->dob,'know_about_product'=>$data->know_about_product,'is_manufacture'=>$data->is_manufacture]);			
-			
-			if($user)
-            {
-				return response()->json([
-					'success' => true,
-					'message' => "Registartion done successfully",
-					'data'    => $user
-				]);
-            }else{
-				return response()->json([
-					'success' => false,
-					'message' => "Registartion not done successfully",
-					'data'    => []
-				]);
-            }           
-		}		 	
-	}
-
 	/**
 	* Login user 
 	*@Author Bharti <bharati.tadvi@neosofttech.com>
@@ -328,7 +287,7 @@ class UserRepository implements UserInterface{
 	}
 
 	/**
-	* Save user Changes
+	* Save user Deatils
 	*@Author Rupali <rupali.satpute@neosofttech.com>
 	*
     * @param  $data
@@ -350,11 +309,11 @@ class UserRepository implements UserInterface{
         {
 			//data Save to users Table
 			// $UpdateDetails = User::where('email', $userEmail)->firstOrFail();
-			$user = User::where('mobile_number', $data->mobile_number)->update(['name'=>$data->name,'dob'=>$data->dob,'is_manufacture'=>$data->is_manufacture,'is_profile_complete'=> 1]);
+			$user = User::where('mobile_number', $data->mobile_number)->update(['name'=>$data->name,'email'=>$data->email,'dob'=>$data->dob,'is_manufacture'=>$data->is_manufacture,'is_profile_complete'=> 1]);
 			
 
 			$lastUserId = User::all()->last();
-			// dd($lastUserId);
+
 			//data Save to know_about_product Table		
 			$storeKnowAboutProduct = KnowAboutProduct::create(
 				['en_name' => $data->know_about_product]);
@@ -367,10 +326,13 @@ class UserRepository implements UserInterface{
 
 			foreach ($userProductSave as $value) { 
 				$fetchCategoryId = UserProduct::where('category_id',$value['category'])->pluck('user_id');
-				// $userData = User::whereIn('id',$fetchCategoryId)->get();
+				$userData = User::whereIn('id',$fetchCategoryId)->get();
 				$userId = User::whereIn('id',$fetchCategoryId)->pluck('id');
 			 	$userIdJson = json_encode($userId);
 			 	// dd($userIdJson);
+			 	// $this->dispatchFrom(EmailNotificationSend::class, $userData);
+			 	EmailNotificationSend::dispatch($userData);
+			 	// dd('will success');
 			 	$message = "Successfully Imported";
 			 	$importData = ImportProductNotify::create(
 			 		['category_id' => $value['category'],
@@ -392,7 +354,7 @@ class UserRepository implements UserInterface{
 			 		]);
 
 			}
-			// dd($user);
+			
 			if($user)
             {
 				return response()->json([
@@ -482,6 +444,29 @@ class UserRepository implements UserInterface{
 			]);
 		}
 		
+	}
+
+
+	/** User Profile
+	* @Author Rupali <rupali.satpute@neosofttech.com>
+    * @param  $id
+    * @return $userProfile 
+	*/
+	function getuserProfile($id){
+		$userProfile = User::with('rating')->where('id',$id)->get();
+		if(count($userProfile) > 0){
+			return response()->json([
+			'code' => '200',
+			'message' => 'User Profile fetched Successfully!!',
+			'data'    => $userProfile
+			]);
+		}else{
+			return response()->json([
+			'code' => '404',
+			'message' => 'User Profile not fetched!!',
+			'data'    => $userProfile
+			]);
+		}
 	}
 
 	

@@ -20,7 +20,7 @@ class User extends Authenticatable
      *
      * @var array
     */
-    public $fillable = ['id','mobile_number','name','dob','know_about_product','is_manufacture'];
+    public $fillable = ['id','mobile_number','name','email','dob','know_about_product','is_manufacture'];
     
     /**
      * The attributes that should be hidden for arrays.
@@ -34,5 +34,8 @@ class User extends Authenticatable
         return $this->hasMany(UserProduct::class);
     }
 
+    public function rating(){
+        return $this->hasMany(Rating::class,'user_id');
+    }
     
 }

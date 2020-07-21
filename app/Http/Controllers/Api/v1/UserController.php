@@ -50,4 +50,20 @@ class UserController extends Controller
             return response()->json(['message' => $e->getMessage()], $e->getStatus());
         }  
     }
+
+
+    /**Fetch user profile
+    *@Author Rupali <rupali.satpute@neosofttech.com>
+    * @param  $request
+    * @return $userProfile in JSON format
+    */
+    public function getUserProfile(Request $request){
+        // dd($request->user_id);
+        try {
+            $userProfile = $this->userRepository->getuserProfile($request->user_id);
+            return $userProfile;
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getStatus());
+        }
+    }
 }

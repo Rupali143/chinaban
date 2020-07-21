@@ -4,8 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('dashboard','LoginController@dashboard')->name('admin.dashboard.index');
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::get('/', function () {
     return redirect()->route('admin.login');
 });

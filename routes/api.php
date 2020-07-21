@@ -33,11 +33,11 @@ Route::group(['middleware' => 'auth:api','prefix' => 'v1','namespace' => 'Api\v1
 	->name('user.category');
 	Route::post('/user-product','UserController@getUserProduct')
 	->name('user.product');
+	Route::post('user-profile','UserController@getUserProfile')->name('user.profile');
 	Route::post('rating-product','RatingCommentController@saveRatingProduct');
 	Route::post('comment-product','RatingCommentController@saveCommentProduct');
+
 });
-
-
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
 	return $request->user();

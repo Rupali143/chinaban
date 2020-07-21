@@ -1,4 +1,9 @@
 $(document).ready(function() {
+  $('#createProduct').click(function(){
+    $('#modal_product').modal({
+      backdrop: 'static'
+    });
+  }); 
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

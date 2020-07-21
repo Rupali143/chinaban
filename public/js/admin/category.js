@@ -1,4 +1,9 @@
 $(document).ready(function() {
+  $('#createCategory').click(function(){
+    $('#modal_category').modal({
+      backdrop: 'static'
+    });
+  }); 
   $.ajaxSetup({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -158,8 +163,12 @@ $('body').on('click', '.deleteCategory', function () {
 
 });
 
-//Validation category
 
+
+
+
+
+//Validation category
 $('#image').on('change', function(e) {
   let size = this.files[0].size;
   if (size > 1000000) {

@@ -58,7 +58,6 @@ class RegisterController extends Controller
      * @return $validateOtp
     */
     public function saveUserDetail(Request $request){
-        // dd($request->all());
         try {
             $saveUser = $this->userRepository->saveUser($request);
             return $saveUser;
