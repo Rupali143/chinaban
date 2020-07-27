@@ -74,7 +74,7 @@ class LoginController extends Controller
             }
             return redirect()->route('admin.login')->with('error','Invalid username or password');
         }catch(\Exception $ex){
-            return redirect()->route('admin.login')->with('error',$ex->getMessage);
+            return redirect()->route('admin.login')->with('error','Something Went wrong!');
         } 
     }
 

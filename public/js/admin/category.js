@@ -106,7 +106,6 @@ $('body').on('click', '.editCategory', function () {
   $.get(categoryEdit +'/' + category_id, function (data) {
     console.log(data.parent);
     var imagePath = data.get_image.image_location;
-  
     $('#modelHeading').html("Edit Category");
     $('#saveBtn').val("edit-user");
     $('#modal_category').modal('show');
@@ -119,7 +118,6 @@ $('body').on('click', '.editCategory', function () {
     }else{
       $('#parent_category').val(data.parent.id).trigger('change');
     }
-    // $('#parent_category').append('<option value="' + data.parent.id + '">' + data.parent.en_name + '</option>').attr("selected", "selected");
     })
 });
 
@@ -134,6 +132,11 @@ $('body').on('click', '.deleteCategory', function () {
     confirmButtonText: 'Yes, delete it!'
   }).then((e) => {
     if (e.value === true) {
+      //   thisObj = $(this).data('id');
+      // var url = 'categoryDelete/'+thisObj;
+      // ajax.init();
+      // ajax.method='POST';
+      // alert(JSON.stringify(url));
       $.ajax({
         url: categoryDelete +'/'+category_id,
         type: "POST",

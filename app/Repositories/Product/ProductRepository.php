@@ -6,14 +6,16 @@ use App\Model\Product;
 use App\Model\Category;
 use App\Repositories\Product\ProductInterface;
 use Illuminate\Http\Request;
+use App\Model\UserProduct;
+
 
 class ProductRepository implements ProductInterface{
 
 	public $product;
 
-    function __construct(Product $product) {
-	$this->product = $product;
-    }
+	function __construct(Product $product) {
+		$this->product = $product;
+	}
 	
 	/**
 	* Validate product form.
@@ -22,9 +24,9 @@ class ProductRepository implements ProductInterface{
 	* @param $userRequest
 	* @return $rules
     */
-    protected function validateProduct($requestData){
+	protected function validateProduct($requestData){
 
-        $validateData = $requestData->validate([
+		$validateData = $requestData->validate([
 			'product' => 'required',
 			'category_id' => 'required',
 			'product_detail'=>'required'
@@ -54,15 +56,15 @@ class ProductRepository implements ProductInterface{
 	public function save($data){
 		$validateRules = $this->validateProduct($data);
 		if(is_null($data->product_id)){
-            $product = Product::create(['en_name'=>$data->product,'category_id'=>$data->subcategory,'product_detail'=>$data->product_detail]);
+			$product = Product::create(['en_name'=>$data->product,'category_id'=>$data->subcategory,'product_detail'=>$data->product_detail]);
 			return $product;
 		}else{
 			$updateProduct = Product::updateOrCreate(
-		   	['id' =>  $data->product_id],
-		   	['en_name' =>  $data->product,'category_id' =>  $data->subcategory,'product_detail' => $data->product_detail]);
+				['id' =>  $data->product_id],
+				['en_name' =>  $data->product,'category_id' =>  $data->subcategory,'product_detail' => $data->product_detail]);
 			return $updateProduct;
 		}
-  
+
 	}
 
 	/**
@@ -88,5 +90,36 @@ class ProductRepository implements ProductInterface{
 		$category = $requestData->category_id;
 		$subCategories= Category::where('parent_category', '=', $category)->get();
 		return $subCategories;
+	}
+
+
+
+
+
+	// API
+	/**
+    * Fetch products based on category_id
+    *@Author Rupali <rupali.satpute@neosofttech.com>
+	*
+    * @param  $requestData
+    * @return $categoryProduct
+	*/
+	public function fetchProduct($requestData){
+		$fetchCategoryId = UserProduct::where('category_id',$requestData->category_id)->where('is_import','=','1')->where('deleted_at',NULL)->pluck('product_id');
+		$categoryProduct = Product::whereIn('id',$fetchCategoryId)->where('deleted_at',NULL)->get();
+		if(count($categoryProduct) > 0)
+		{
+			return response()->json([
+				'code' => "200",
+				'message' => "Product fetched successfully",
+				'data'    => $categoryProduct,
+			]);
+		}else{
+			return response()->json([
+				'code' => "412",
+				'message' => "Product not fetched",
+				'data'    => $categoryProduct
+			]);
+		} 
 	}
 }

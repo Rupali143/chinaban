@@ -10,13 +10,14 @@ use App\Repositories\User\UserInterface as UserInterface;
 use Illuminate\Support\Facades\Validator;
 use App\Jobs\EmailNotificationSend;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Bus\PendingDispatch;
 
 class UserRepository implements UserInterface{
 
 	public $user;
 
-    function __construct(User $user) {
-	$this->user = $user;
+	function __construct(User $user) {
+		$this->user = $user;
 	}
 	
 	/**
@@ -26,14 +27,14 @@ class UserRepository implements UserInterface{
 	* @param $userRequest
 	* @return $rules
     */
-    protected function validateUserMobile($userRequest){
+	protected function validateUserMobile($userRequest){
 
-        $rules = [
+		$rules = [
 			'mobile_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
 
 		];
 		return $rules;
-    }
+	}
 	
     /**
 	* Validate Otp.
@@ -42,9 +43,9 @@ class UserRepository implements UserInterface{
 	* @param $userRequest
 	* @return $rules
     */
-    protected function validateMobileOtpRule($userRequest){
+	protected function validateMobileOtpRule($userRequest){
 
-        $rules = [
+		$rules = [
 			'mobile_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
 			'otp' => 'required',
 		];
@@ -58,13 +59,13 @@ class UserRepository implements UserInterface{
 	* @param $userRequest
 	* @return $rules
     */
-    protected function validateUser($userRequest){
+	protected function validateUser($userRequest){
 
-        $rules = [
+		$rules = [
 			'mobile_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
 			'name' => 'required',
 			'dob' => 'required',
-            'is_manufacture' => 'required',
+			'is_manufacture' => 'required',
 		];
 		return $rules;
 	}
@@ -79,20 +80,20 @@ class UserRepository implements UserInterface{
 	public function registerUser1($data){
 		$arr['error'] = array();
 		$validationRules = $this->validateUserMobile($data);
-        $validator = Validator::make($data->all(), $validationRules);
-        /*Check for the validations*/
-        if ($validator->fails())
-        {   
-            return response()->json([
+		$validator = Validator::make($data->all(), $validationRules);
+		/*Check for the validations*/
+		if ($validator->fails())
+		{   
+			return response()->json([
 				'success' => false,
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
-            ]);
+			]);
 		}else
-        {  
+		{  
 			$msg = '';
 			$userObj = User::where('mobile_number',$data->mobile_number)->first();
-		
+
 			if($userObj){
 				$arrError['error'] = ['Mobile number is already exist.'];
 				return response()->json([
@@ -109,7 +110,7 @@ class UserRepository implements UserInterface{
 					'data'    => $phoneNumber
 				]); 		
 			}	       
-        }		 	
+		}		 	
 	}
 
 
@@ -123,17 +124,17 @@ class UserRepository implements UserInterface{
 	public function validateMobileOtp($data){
 		$arr['error'] = array();
 		$validationRules = $this->validateMobileOtpRule($data);
-        $validator = Validator::make($data->all(), $validationRules);
-        /*Check for the validations*/
-        if ($validator->fails())
-        {   
-            return response()->json([
+		$validator = Validator::make($data->all(), $validationRules);
+		/*Check for the validations*/
+		if ($validator->fails())
+		{   
+			return response()->json([
 				'code' => "404",
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
-            ]);
+			]);
 		}else
-        {
+		{
 			if($data->otp == "1234"){
 				$user = User::create(['mobile_number'=> $data->mobile_number]);
 				$access_token =  $user->createToken('MyApp')->accessToken;
@@ -150,7 +151,7 @@ class UserRepository implements UserInterface{
 					'data'    => $arrError
 				]);
 			} 
-        }		 	
+		}		 	
 	}
 
 	/**
@@ -164,16 +165,16 @@ class UserRepository implements UserInterface{
 		$arr['error'] = array();
 		$validationRules = $this->validateUserMobile($requestData);
 		$validator = Validator::make($requestData->all(), $validationRules);
-        /*Check for the validations*/
-        if ($validator->fails())
-        {   
-            return response()->json([
+		/*Check for the validations*/
+		if ($validator->fails())
+		{   
+			return response()->json([
 				'success' => false,
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
-            ]);
+			]);
 		}else
-        {
+		{
 			$user = User::where('mobile_number',$requestData->mobile_number)->first();
 
 			$data['user'] = array('id'=>$user->id,'name'=>$user->name,'dob'=>!empty($user->dob) ? strtotime($user->dob) : '');
@@ -185,16 +186,16 @@ class UserRepository implements UserInterface{
 					'success' => true,
 					'message' => $msg,
 					'data'    => []
-			    ]);
+				]);
 			}else{
 				$arrError['error'] = ['Mobile number not exist'];
-                return response()->json([
-                    'success' => false,
-                    'message' => "Mobile number not exist",
-                    'data'    => $arrError
-                ]);
+				return response()->json([
+					'success' => false,
+					'message' => "Mobile number not exist",
+					'data'    => $arrError
+				]);
 			}     
-        }
+		}
 	}
 
 	/**
@@ -209,16 +210,16 @@ class UserRepository implements UserInterface{
 		$validationRules = $this->validateMobileOtpRule($requestData);
 
 		$validator = Validator::make($requestData->all(), $validationRules);
-        /*Check for the validations*/
-        if ($validator->fails())
-        {   
-            return response()->json([
-            'success' => false,
-            'message' => 'validation failed',
-            'data'    => $validator->errors(),
-            ]);
+		/*Check for the validations*/
+		if ($validator->fails())
+		{   
+			return response()->json([
+				'success' => false,
+				'message' => 'validation failed',
+				'data'    => $validator->errors(),
+			]);
 		}else
-        {
+		{
 			$user = User::where('mobile_number',$requestData->mobile_number)->first();
 
 			$data['user'] = array('id'=>$user->id,'name'=>$user->name,'dob'=>!empty($user->dob) ? strtotime($user->dob) : '');
@@ -237,7 +238,7 @@ class UserRepository implements UserInterface{
 					'data'    => $arrError
 				]);
 			} 
-        }	
+		}	
 	}
 
 
@@ -253,20 +254,20 @@ class UserRepository implements UserInterface{
 	public function registerUser($data){ 
 		$arr['error'] = array();
 		$validationRules = $this->validateUserMobile($data->mobile_number);
-        $validator = Validator::make($data->all(), $validationRules);
-        /*Check for the validations*/
-        if ($validator->fails())
-        {   
-            return response()->json([
+		$validator = Validator::make($data->all(), $validationRules);
+		/*Check for the validations*/
+		if ($validator->fails())
+		{   
+			return response()->json([
 				'code' => "412",
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
-            ]);
+			]);
 		}else
-        {  
+		{  
 			$msg = '';
 			$userObj = User::where('mobile_number',$data->mobile_number)->first();
-		
+
 			if($userObj){
 				$arrError['error'] = ['Mobile number is already exist.'];
 				return response()->json([
@@ -283,7 +284,7 @@ class UserRepository implements UserInterface{
 					'data'    => $phoneNumber
 				]); 		
 			}	       
-        }		 	
+		}		 	
 	}
 
 	/**
@@ -296,22 +297,21 @@ class UserRepository implements UserInterface{
 	public function saveUser($data){ 
 		$arr['error'] = array();
 		$validationRules = $this->validateUser($data);
-        $validator = Validator::make($data->all(), $validationRules);
-        /*Check for the validations*/
-        if ($validator->fails())
-        {   
-            return response()->json([
+		$validator = Validator::make($data->all(), $validationRules);
+		/*Check for the validations*/
+		if ($validator->fails())
+		{   
+			return response()->json([
 				'code' => "412",
 				'message' => 'validation failed',
 				'data'    => $validator->errors(),
-            ]);
+			]);
 		}else
-        {
+		{
 			//data Save to users Table
 			// $UpdateDetails = User::where('email', $userEmail)->firstOrFail();
 			$user = User::where('mobile_number', $data->mobile_number)->update(['name'=>$data->name,'email'=>$data->email,'dob'=>$data->dob,'is_manufacture'=>$data->is_manufacture,'is_profile_complete'=> 1]);
 			
-
 			$lastUserId = User::all()->last();
 
 			//data Save to know_about_product Table		
@@ -321,54 +321,52 @@ class UserRepository implements UserInterface{
 			//import_product_notify
 			
 
-			//data Save to products & user_product Table	// where('is_manufacture',1)->	
+			//data Save to products & user_product Table// where('is_manufacture',1)->	
 			$userProductSave = $data->get('domain_category');
 
 			foreach ($userProductSave as $value) { 
-				$fetchCategoryId = UserProduct::where('category_id',$value['category'])->pluck('user_id');
+				$fetchCategoryId = UserProduct::where('category_id',$value['category'])->where('is_import','=','1')->pluck('user_id');
 				$userData = User::whereIn('id',$fetchCategoryId)->get();
 				$userId = User::whereIn('id',$fetchCategoryId)->pluck('id');
-			 	$userIdJson = json_encode($userId);
-			 	// dd($userIdJson);
-			 	// $this->dispatchFrom(EmailNotificationSend::class, $userData);
-			 	EmailNotificationSend::dispatch($userData);
-			 	// dd('will success');
-			 	$message = "Successfully Imported";
-			 	$importData = ImportProductNotify::create(
-			 		['category_id' => $value['category'],
-			 		 'message' =>  $message,
-			 		 'notify_user_id' => $userIdJson,
-			 		]);
+				$userIdJson = json_encode($userId);
+				//job dispatch for email send
+				EmailNotificationSend::dispatch($data->toArray(),$userData);
+				$message = "Successfully Imported";
+				$importData = ImportProductNotify::create(
+					['category_id' => $value['category'],
+					'message' =>  $message,
+					'notify_user_id' => $userIdJson,
+				]);
 
-			 	$storeProduct = Product::create(
-			 		['en_name' => $value['product_name'],
-			 		 'category_id' => $value['category'],
-			 		 'product_detail' => $value['product_details']
-			 		]);
+				$storeProduct = Product::create(
+					['en_name' => $value['product_name'],
+					'category_id' => $value['category'],
+					'product_detail' => $value['product_details']
+				]);
 
-			 	$storeUserProduct = UserProduct::create([
-			 		'category_id' => $value['category'],
-			 		'user_id' => $lastUserId->id,
-			 		'product_id'=> $storeProduct->id,
-			 		'is_import' => $value['is_imported']
-			 		]);
+				$storeUserProduct = UserProduct::create([
+					'category_id' => $value['category'],
+					'user_id' => $lastUserId->id,
+					'product_id'=> $storeProduct->id,
+					'is_import' => $value['is_imported']
+				]);
 
 			}
 			
 			if($user)
-            {
+			{
 				return response()->json([
 					'code' => "200",
 					'message' => "Registartion done successfully",
 					'data'    => $user,
 				]);
-            }else{
+			}else{
 				return response()->json([
 					'code' => "412",
 					'message' => "Registartion not done successfully",
 					'data'    => []
 				]);
-            }           
+			}           
 		}		 	
 	}
 
@@ -406,15 +404,15 @@ class UserRepository implements UserInterface{
 		$product = UserProduct::where('user_id','=',$id)->get();
 		if(count($product) > 0){
 			return response()->json([
-			'code' => '200',
-			'message' => 'User product fetched Successfully!!',
-			'data'    => $product
+				'code' => '200',
+				'message' => 'User product fetched Successfully!!',
+				'data'    => $product
 			]);
 		}else{
 			return response()->json([
-			'code' => '404',
-			'message' => 'User product not fetched!!',
-			'data'    => $product
+				'code' => '404',
+				'message' => 'User product not fetched!!',
+				'data'    => $product
 			]);
 		}
 	}
@@ -432,15 +430,15 @@ class UserRepository implements UserInterface{
 		$category = UserProduct::with('category')->where('user_id',$id)->get();
 		if(count($category) > 0){
 			return response()->json([
-			'code' => '200',
-			'message' => 'User category fetched Successfully!!',
-			'data'    => $category
+				'code' => '200',
+				'message' => 'User category fetched Successfully!!',
+				'data'    => $category
 			]);
 		}else{
 			return response()->json([
-			'code' => '404',
-			'message' => 'User category not fetched!!',
-			'data'    => $category
+				'code' => '404',
+				'message' => 'User category not fetched!!',
+				'data'    => $category
 			]);
 		}
 		
@@ -456,15 +454,15 @@ class UserRepository implements UserInterface{
 		$userProfile = User::with('rating')->where('id',$id)->get();
 		if(count($userProfile) > 0){
 			return response()->json([
-			'code' => '200',
-			'message' => 'User Profile fetched Successfully!!',
-			'data'    => $userProfile
+				'code' => '200',
+				'message' => 'User Profile fetched Successfully!!',
+				'data'    => $userProfile
 			]);
 		}else{
 			return response()->json([
-			'code' => '404',
-			'message' => 'User Profile not fetched!!',
-			'data'    => $userProfile
+				'code' => '404',
+				'message' => 'User Profile not fetched!!',
+				'data'    => $userProfile
 			]);
 		}
 	}

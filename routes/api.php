@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth:api','prefix' => 'v1','namespace' => 'Api\v1
 	Route::post('user-profile','UserController@getUserProfile')->name('user.profile');
 	Route::post('rating-product','RatingCommentController@saveRatingProduct');
 	Route::post('comment-product','RatingCommentController@saveCommentProduct');
+	Route::post('/fetch-product','ProductController@fetchProduct');
 
 });
 
