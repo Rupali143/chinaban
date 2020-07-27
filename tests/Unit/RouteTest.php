@@ -18,15 +18,15 @@ class RouteTest extends TestCase
      */
     public function testExample1()
     {
-       $response = $this->get('/');
+       $response = $this->get('/fetch-category');
        $response->assertStatus(200);
     }
 
-    public function loginTest1()
-    {
-        $response = $this->post("/admin/category");
-        $response->assertStatus(200);
-    }
+    // public function loginTest1()
+    // {
+    //     $response = $this->post("/admin/category");
+    //     $response->assertStatus(200);
+    // }
 
     // public function checkCategory(){
     // 	$response = $this->post("/checkCategory");

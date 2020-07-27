@@ -14,6 +14,6 @@ class LoginTest extends TestCase
     public function testExample()
     {
     	$response = $this->post("/checkCategory");
-        $this->assertTrue(true);
+        $this->assertTrue(200);
     }
 }
